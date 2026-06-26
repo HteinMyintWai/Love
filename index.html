@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sticker Gallery</title>
+    <style>
+        .sticker-btn { margin: 5px; padding: 10px; cursor: pointer; }
+        #display-area { margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h2>စတစ်ကာများကို ရွေးချယ်ပါ</h2>
+    
+    <!-- စတစ်ကာခလုတ်များ -->
+    <button class="sticker-btn" onclick="showSticker('sticker1.png')">စတစ်ကာ ၁</button>
+    <button class="sticker-btn" onclick="showSticker('sticker2.png')">စတစ်ကာ ၂</button>
+    <button class="sticker-btn" onclick="showSticker('sticker3.png')">စတစ်ကာ ၃</button>
+
+    <!-- ပုံဖော်ပြမည့်နေရာ -->
+    <div id="display-area">
+        <img id="main-sticker" src="" alt="ရွေးချယ်ထားသော စတစ်ကာ" style="width: 150px;">
+    </div>
+
+    <script>
+        function showSticker(imageName) {
+            document.getElementById('main-sticker').src = imageName;
+        }
+    </script>
+</body>
+</html>
