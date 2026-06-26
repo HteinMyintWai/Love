@@ -1,255 +1,30 @@
 <!DOCTYPE html>
-<html lang="my">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ငွေလွှဲငွေထုတ် တွက်ချက်ရေး</title>
+    <title>Sticker Gallery</title>
     <style>
-        :root {
-            --primary: #0056b3;
-            --success: #198754;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --bg: #f0f2f5;
-        }
-
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--bg);
-            margin: 0;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-
-        .header {
-            background: var(--primary);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
-
-        .section {
-            padding: 20px;
-            border-bottom: 5px solid var(--bg);
-        }
-
-        .label-text {
-            font-size: 14px;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        /* Provider Management */
-        .provider-manager {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
-            outline: none;
-        }
-
-        .btn-sm {
-            padding: 0 15px;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Action Buttons */
-        .btn-row { display: flex; gap: 10px; margin-bottom: 15px; }
-        .toggle-btn {
-            flex: 1; padding: 14px; border: 2px solid #ddd; border-radius: 10px;
-            background: white; font-weight: bold; cursor: pointer;
-        }
-        .toggle-btn.in.active { background: var(--success); color: white; border-color: var(--success); }
-        .toggle-btn.out.active { background: var(--danger); color: white; border-color: var(--danger); }
-
-        .btn-main {
-            background: var(--primary); color: white; border: none;
-            width: 100%; padding: 16px; border-radius: 10px;
-            font-size: 16px; font-weight: bold; cursor: pointer;
-        }
-
-        /* Table & Icons */
-        .table-section { padding: 10px; max-height: 250px; overflow-y: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        td, th { padding: 12px 8px; text-align: left; border-bottom: 1px solid #eee; }
-        
-        .delete-icon {
-            color: var(--danger);
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 18px;
-            padding: 5px;
-        }
-
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
-        .bg-in { background: #d1e7dd; color: #0f5132; }
-        .bg-out { background: #f8d7da; color: #842029; }
-
-        .summary { padding: 20px; background: #f8f9fa; text-align: right; }
-        .total-amount { font-size: 24px; font-weight: bold; color: var(--success); }
+        .sticker-btn { margin: 5px; padding: 10px; cursor: pointer; }
+        #display-area { margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">ငွေလွှဲငွေထုတ် တွက်ချက်ရေး</div>
+    <h2>စတစ်ကာများကို ရွေးချယ်ပါ</h2>
+    
+    <!-- စတစ်ကာခလုတ်များ -->
+    <button class="sticker-btn" onclick="showSticker('sticker1.png')">စတစ်ကာ ၁</button>
+    <button class="sticker-btn" onclick="showSticker('sticker2.png')">စတစ်ကာ ၂</button>
+    <button class="sticker-btn" onclick="showSticker('sticker3.png')">စတစ်ကာ ၃</button>
 
-    <!-- Provider Management -->
-    <div class="section">
-        <label class="label-text">Provider စီမံရန် (ထည့်ရန်/ဖျက်ရန်)</label>
-        <div class="provider-manager">
-            <input type="text" id="newCat" placeholder="အမျိုးအစားသစ်...">
-            <button class="btn-sm" style="background: var(--warning);" onclick="addProvider()">+ ထည့်</button>
-            <button class="btn-sm" style="background: #eee; color: #d32f2f;" onclick="removeProvider()">ဖျက်</button>
-        </div>
-        
-        <select id="providerSelect">
-            <option value="Kpay">Kpay</option>
-            <option value="Wave Pay">Wave Pay</option>
-        </select>
+    <!-- ပုံဖော်ပြမည့်နေရာ -->
+    <div id="display-area">
+        <img id="main-sticker" src="" alt="ရွေးချယ်ထားသော စတစ်ကာ" style="width: 150px;">
     </div>
 
-    <!-- Calc Section -->
-    <div class="section">
-        <label class="label-text">လုပ်ဆောင်ချက်</label>
-        <div class="btn-row">
-            <button id="inBtn" class="toggle-btn in active" onclick="setMode('ငွေသွင်း')">📥 ငွေသွင်း</button>
-            <button id="outBtn" class="toggle-btn out" onclick="setMode('ငွေထုတ်')">📤 ငွေထုတ်</button>
-        </div>
-
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <div style="flex: 2;">
-                <label class="label-text">ပမာဏ</label>
-                <input type="number" id="amt" placeholder="0" oninput="calc()">
-            </div>
-            <div style="flex: 1;">
-                <label class="label-text">ရာခိုင်နှုန်း (%)</label>
-                <input type="number" id="pct" placeholder="1.5" oninput="calc()">
-            </div>
-        </div>
-
-        <label class="label-text">အမြတ်ငွေ (Ks)</label>
-        <input type="number" id="profit" readonly style="background: #f8f9fa; font-weight: bold; color: var(--success); margin-bottom: 15px;">
-
-        <button class="btn-main" onclick="save()">စာရင်းသိမ်းဆည်းမည်</button>
-    </div>
-
-    <!-- Log Table -->
-    <div class="table-section">
-        <table>
-            <thead>
-                <tr>
-                    <th>အမျိုးအစား</th>
-                    <th>အမြတ်</th>
-                    <th>ဖျက်</th>
-                </tr>
-            </thead>
-            <tbody id="dataBody"></tbody>
-        </table>
-    </div>
-
-    <div class="summary">
-        <span style="font-size: 14px; color: #666;">စုစုပေါင်းအမြတ်</span><br>
-        <span id="grandTotal" class="total-amount">0</span> Ks
-    </div>
-</div>
-
-<script>
-    let mode = "ငွေသွင်း";
-    let total = 0;
-
-    function setMode(m) {
-        mode = m;
-        document.getElementById('inBtn').classList.toggle('active', m === 'ငွေသွင်း');
-        document.getElementById('outBtn').classList.toggle('active', m === 'ငွေထုတ်');
-    }
-
-    // Provider အသစ်ထည့်ရန်
-    function addProvider() {
-        const val = document.getElementById('newCat').value.trim();
-        if (val) {
-            const sel = document.getElementById('providerSelect');
-            const opt = document.createElement('option');
-            opt.text = val; opt.value = val;
-            sel.add(opt);
-            sel.value = val;
-            document.getElementById('newCat').value = "";
+    <script>
+        function showSticker(imageName) {
+            document.getElementById('main-sticker').src = imageName;
         }
-    }
-
-    // ရွေးထားသော Provider ကို ပြန်ဖျက်ရန်
-    function removeProvider() {
-        const sel = document.getElementById('providerSelect');
-        if (sel.options.length > 0) {
-            if(confirm("ရွေးချယ်ထားသော '" + sel.value + "' ကို ဖျက်လိုပါသလား?")) {
-                sel.remove(sel.selectedIndex);
-            }
-        }
-    }
-
-    function calc() {
-        const a = parseFloat(document.getElementById('amt').value) || 0;
-        const p = parseFloat(document.getElementById('pct').value) || 0;
-        document.getElementById('profit').value = (a * p) / 100;
-    }
-
-    function save() {
-        const pvd = document.getElementById('providerSelect').value;
-        const pft = parseFloat(document.getElementById('profit').value) || 0;
-        if (pft <= 0) return;
-
-        const body = document.getElementById('dataBody');
-        const row = body.insertRow(0);
-        const cls = mode === 'ငွေသွင်း' ? 'bg-in' : 'bg-out';
-
-        row.innerHTML = `
-            <td><strong>${pvd}</strong><br><span class="badge ${cls}">${mode}</span></td>
-            <td style="color: var(--success); font-weight: bold;">${pft.toLocaleString()}</td>
-            <td class="delete-icon" onclick="deleteRow(this, ${pft})">×</td>
-        `;
-
-        updateTotal(pft);
-        document.getElementById('amt').value = "";
-        document.getElementById('profit').value = "";
-    }
-
-    function deleteRow(btn, pft) {
-        if(confirm("ဤစာရင်းကို ဖျက်လိုပါသလား?")) {
-            const row = btn.parentNode;
-            row.parentNode.removeChild(row);
-            updateTotal(-pft);
-        }
-    }
-
-    function updateTotal(val) {
-        total += val;
-        document.getElementById('grandTotal').innerText = total.toLocaleString();
-    }
-</script>
-
+    </script>
 </body>
 </html>
