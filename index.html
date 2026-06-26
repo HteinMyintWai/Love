@@ -1,39 +1,29 @@
 <!DOCTYPE html>
-<html lang="my">
+<html>
 <head>
     <style>
-        .container { text-align: center; margin-top: 50px; }
-        .sticker-box { width: 200px; height: 200px; margin: 20px auto; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; }
-        .sticker-box img { max-width: 100%; height: auto; }
-        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #ff4081; color: white; border: none; border-radius: 5px; }
+        .sticker-btn { margin: 5px; padding: 10px; cursor: pointer; }
+        #display-area { margin-top: 20px; }
+        img { width: 150px; height: 150px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Dudu 3D Sticker Animation</h2>
+    <h2>စတစ်ကာများကို ရွေးချယ်ပါ</h2>
     
-    <div class="sticker-box">
-        <img id="sticker-display" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJqZ2U4&rid=giphy.gif" alt="Sticker">
+    <button class="sticker-btn" onclick="showSticker('https://i.imgur.com/example1.png')">စတစ်ကာ ၁</button>
+    <button class="sticker-btn" onclick="showSticker('https://i.imgur.com/example2.png')">စတစ်ကာ ၂</button>
+    <button class="sticker-btn" onclick="showSticker('https://i.imgur.com/example3.png')">စတစ်ကာ ၃</button>
+
+    <div id="display-area">
+        <p>ရွေးချယ်ထားသော စတစ်ကာ:</p>
+        <img id="main-sticker" src="" alt="စတစ်ကာပုံ ပေါ်လာပါမည်">
     </div>
 
-    <button onclick="changeSticker()">နောက်တစ်ပုံ ပြောင်းမည်</button>
-</div>
-
-<script>
-    // ဒီမှာ အရှင်လေးတွေရဲ့ link ကို ထည့်ပါ
-    const stickers = [
-        "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJqZ2U4&rid=giphy.gif",
-        "https://media.giphy.com/media/l41lTjJp90YpB4k8M/giphy.gif",
-        "https://media.giphy.com/media/3o7TKMGpxxHOGTdzJC/giphy.gif"
-    ];
-    
-    let index = 0;
-    function changeSticker() {
-        index = (index + 1) % stickers.length;
-        document.getElementById('sticker-display').src = stickers[index];
-    }
-</script>
-
+    <script>
+        function showSticker(imageUrl) {
+            document.getElementById('main-sticker').src = imageUrl;
+        }
+    </script>
 </body>
 </html>
