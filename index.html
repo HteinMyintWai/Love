@@ -1,29 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="my">
 <head>
+    <meta charset="UTF-8">
+    <title>Sticker Animation</title>
     <style>
-        .sticker-btn { margin: 5px; padding: 10px; cursor: pointer; }
-        #display-area { margin-top: 20px; }
-        img { width: 150px; height: 150px; }
+        body { text-align: center; font-family: sans-serif; margin-top: 50px; }
+        #sticker-display { width: 250px; height: 250px; transition: transform 0.3s; }
+        button { padding: 12px 25px; font-size: 16px; cursor: pointer; background: #ff4081; color: white; border: none; border-radius: 8px; margin-top: 20px; }
+        button:hover { background: #e91e63; }
     </style>
 </head>
 <body>
 
-    <h2>စတစ်ကာများကို ရွေးချယ်ပါ</h2>
+    <h2>စတစ်ကာ အရှင်လေးများ</h2>
     
-    <button class="sticker-btn" onclick="showSticker('https://i.imgur.com/example1.png')">စတစ်ကာ ၁</button>
-    <button class="sticker-btn" onclick="showSticker('https://i.imgur.com/example2.png')">စတစ်ကာ ၂</button>
-    <button class="sticker-btn" onclick="showSticker('https://i.imgur.com/example3.png')">စတစ်ကာ ၃</button>
-
-    <div id="display-area">
-        <p>ရွေးချယ်ထားသော စတစ်ကာ:</p>
-        <img id="main-sticker" src="" alt="စတစ်ကာပုံ ပေါ်လာပါမည်">
+    <div>
+        <img id="sticker-display" src="https://media.tenor.com/images/8f01c876b668f4477c72f4414c514867/tenor.gif" alt="Sticker">
     </div>
 
+    <button onclick="changeSticker()">နောက်တစ်ပုံ ပြောင်းမည်</button>
+
     <script>
-        function showSticker(imageUrl) {
-            document.getElementById('main-sticker').src = imageUrl;
+        // ဒီနေရာမှာ သင့် GIF လင့်ခ်တွေကို ထည့်ပါ
+        const stickers = [
+            "https://media.tenor.com/images/8f01c876b668f4477c72f4414c514867/tenor.gif",
+            "https://media.tenor.com/images/5f0e0b3c58f00069352e4630730d52f6/tenor.gif",
+            "https://media.tenor.com/images/c2c5c96035f553f1915993881432f808/tenor.gif"
+        ];
+        
+        let index = 0;
+        function changeSticker() {
+            index = (index + 1) % stickers.length;
+            const img = document.getElementById('sticker-display');
+            img.src = stickers[index];
+            // ခလုတ်နှိပ်တိုင်း ပုံလေး နည်းနည်းလှုပ်သွားအောင်လုပ်တာ
+            img.style.transform = "scale(1.1)";
+            setTimeout(() => { img.style.transform = "scale(1)"; }, 200);
         }
     </script>
+
 </body>
 </html>
