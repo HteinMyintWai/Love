@@ -2,32 +2,367 @@
 <html lang="my">
 <head>
     <meta charset="UTF-8">
-    <title>For My Love</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Love Question</title>
     <style>
-        body { text-align: center; font-family: 'Arial', sans-serif; background-color: #ffe6e6; padding-top: 100px; }
-        .container { background: white; padding: 30px; border-radius: 20px; display: inline-block; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        h1 { color: #d63384; }
-        .btn { padding: 15px 30px; font-size: 18px; margin: 10px; cursor: pointer; border: none; border-radius: 10px; transition: 0.3s; }
-        #yesBtn { background-color: #28a745; color: white; }
-        #noBtn { background-color: #dc3545; color: white; position: absolute; }
+        /* တစ်ကိုယ်လုံးကို အလယ်တည့်တည့်မှာ ပုံသေချုပ်ထားမယ့် စနစ် */
+        body {
+            background-color: #e6f2ff; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+
+        /* ပင်မ Container Wrapper */
+        .wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+            align-items: center;
+            justify-items: center;
+            width: 100%;
+            max-width: 360px;
+            min-height: 480px; 
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* မျက်နှာပြင် နှစ်ခုလုံးကို တစ်နေရာတည်းမှာ ကွက်တိ ထပ်နေစေမယ့်စနစ် */
+        .page-section {
+            grid-area: 1 / 1 / 2 / 2;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-sizing: border-box;
+            transition: opacity 0.3s ease;
+        }
+
+        #love-box {
+            display: none;
+            opacity: 0;
+        }
+
+        /* ညာဘက်အပေါ်ထောင့်တွင် ပုံသေတည်ရှိနေမည့် Home Button */
+        .btn-home {
+            display: none; 
+            position: fixed; 
+            top: 20px;
+            right: 20px;
+            background: #ffffff;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 9999; 
+        }
+        
+        /* CSS Home Icon */
+        .home-icon {
+            position: relative;
+            width: 16px;
+            height: 14px;
+            background: #007bff;
+            margin-top: 6px;
+            transition: all 0.3s ease;
+        }
+        .home-icon:before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -4px;
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 10px solid #007bff;
+            transition: all 0.3s ease;
+        }
+        .home-icon:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 5px;
+            width: 6px;
+            height: 7px;
+            background: #ffffff;
+        }
+
+        .btn-home:hover {
+            background: #007bff;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.35);
+        }
+        .btn-home:hover .home-icon { background: #ffffff; }
+        .btn-home:hover .home-icon:before { border-bottom-color: #ffffff; }
+        .btn-home:hover .home-icon:after { background: #007bff; }
+        .btn-home:active { transform: translateY(-1px) scale(0.98); }
+
+        /* GIF Container အရွယ်အစား ပုံသေ */
+        .gif-container {
+            margin-bottom: 25px;
+            border-radius: 15px;
+            overflow: hidden;
+            width: 220px;  
+            height: 220px; 
+            display: block;
+        }
+
+        #waiting-gif-box { display: none; }
+        .gif-surprise { display: none; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); }
+
+        /* စာသားနေရာ */
+        .question-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2b2d42;
+            margin: 0 0 25px 0;
+            line-height: 1.4;
+        }
+
+        /* ဘုံသုံး ရလဒ်စာသား Layout */
+        .result-text {
+            display: none; 
+            font-size: 17px;
+            font-weight: bold;
+            margin-top: 25px; 
+            line-height: 1.6;
+            width: 100%;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+        }
+
+        /* "အရမ်းချစ်တယ်" နှိပ်ရင် ထွက်လာမယ့် အချစ်ကဗျာဆန်စာသားအလှ */
+        #sweet-text {
+            background: linear-gradient(45deg, #ff007f 0%, #ff758c 50%, #ffb300 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 5px rgba(255, 117, 140, 0.4));
+        }
+
+        /* "မချစ်ဖူး" နှိပ်ရင် ထွက်လာမယ့် စနောက်ကျီစယ်စာသားအလှ */
+        #joke-text {
+            background: linear-gradient(45deg, #e60033 0%, #ff4d6d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 4px rgba(230, 0, 51, 0.3));
+        }
+
+        /* ဘုံသုံး ခလုတ်ဒီဇိုင်း */
+        .btn-outline {
+            background: transparent;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            user-select: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            white-space: nowrap;
+        }
+        .btn-outline:active { transform: scale(0.95) translateY(2px) !important; box-shadow: none !important; }
+
+        .btn-main {
+            border: 2px solid #0056b3;
+            color: #0056b3;
+            box-shadow: 0 0 10px rgba(0, 86, 179, 0.2);
+        }
+        .btn-main:hover { background-color: #0056b3; color: white; box-shadow: 0 0 15px rgba(0, 86, 179, 0.5); }
+
+        .buttons-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn-love { border: 2px solid #007bff; color: #007bff; box-shadow: 0 3px 0 #b2d4ff; }
+        .btn-love:hover { background-color: rgba(0, 123, 255, 0.05); }
+
+        .btn-not-love { border: 2px solid #6c757d; color: #6c757d; box-shadow: 0 3px 0 #bcbfc2; }
+        .btn-not-love:hover { background-color: rgba(108, 117, 125, 0.05); }
+
+        /* Animations */
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        .shake-effect { animation: shake 0.3s ease-in-out; }
+
+        /* ဖြည်းဖြည်းချင်း ဖျာထွက်မယ့် Particle စနစ် */
+        .particle {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            animation: floatOutSlow 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            z-index: 9999;
+        }
+
+        @keyframes floatOutSlow {
+            0% { 
+                transform: translate(0, 0) scale(0.5); 
+                opacity: 0; 
+            }
+            15% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1.2); 
+            }
+            100% { 
+                transform: translate(var(--x), var(--y)) scale(0.4); 
+                opacity: 0; 
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <img src="https://media.tenor.com/images/8f01c876b668f4477c72f4414c514867/tenor.gif" width="200">
-    <h1>ကိုယ်နဲ့တွဲပေးမလား?</h1>
-    <button id="yesBtn" class="btn" onclick="alert('ချစ်တယ်နော်! ❤️')">ဟုတ်ကဲ့၊ တွဲမယ်</button>
-    <button id="noBtn" class="btn" onmouseover="moveNo()">မတွဲဘူး</button>
-</div>
+    <button type="button" class="btn-home" id="home-button" onclick="goBackToMain()" title="ပင်မစာမျက်နှာသို့">
+        <div class="home-icon"></div>
+    </button>
 
-<script>
-    function moveNo() {
-        const btn = document.getElementById('noBtn');
-        btn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
-        btn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
-    }
-</script>
+    <div class="wrapper">
+        <div class="page-section" id="main-section">
+            <div class="gif-container">
+                <div class="tenor-gif-embed" data-postid="7562928744613497012" data-share-method="host" data-aspect-ratio="0.97479" data-width="100%">
+                    <a href="https://tenor.com/view/milk-and-mocha-milk-mocha-bear-milk-mocha-dance-gif-7562928744613497012">Milk And Mocha GIF</a>
+                </div>
+            </div>
+            <div class="question-text">ကျွန်တော်ခဗျားလေးကိုမေးစရာရှိလို့...</div>
+            <button type="button" class="btn-outline btn-main" onclick="showLoveButtons()">ဘာမေးမှာလဲ နှိပ်ကြည့်မယ်</button>
+        </div>
+
+        <div class="page-section" id="love-box">
+            <div class="gif-container" id="waiting-gif-box">
+                <div class="tenor-gif-embed" data-postid="14531661802041862698" data-share-method="host" data-aspect-ratio="1" data-width="100%">
+                    <a href="https://tenor.com/view/milkandmocha-gif-14531661802041862698">Milkandmocha Sticker</a>
+                </div>
+            </div>
+
+            <div class="gif-container gif-surprise" id="happy-gif-box">
+                <div class="tenor-gif-embed" data-postid="8604663346218614199" data-share-method="host" data-aspect-ratio="1.23333" data-width="100%">
+                    <a href="https://tenor.com/view/milk-and-mocha-milk-and-mocha-bear-gif-8604663346218614199">Milk And Mocha Bear Sticker</a>
+                </div>
+            </div>
+
+            <div class="gif-container gif-surprise" id="sad-gif-box">
+                <div class="tenor-gif-embed" data-postid="4822939937925547997" data-share-method="host" data-aspect-ratio="1.06796" data-width="100%">
+                    <a href="https://tenor.com/view/mocha-cry-gif-4822939937925547997">Mocha Cry Sticker</a>
+                </div>
+            </div>
+            
+            <div class="buttons-row">
+                <button type="button" class="btn-outline btn-love" onclick="playLoveEffect(event)">အရမ်းချစ်တယ်</button>
+                <button type="button" class="btn-outline btn-not-love" onclick="playAngryEffect(this, event)">မချစ်ဖူး</button>
+            </div>
+
+            <div class="result-text" id="sweet-text">
+                တစ်သက်လုံး ထာဝရချစ်သွားမှာပါ ချစ်ရတဲ့သူလေးရယ် 🥰💖
+            </div>
+
+            <div class="result-text" id="joke-text">
+                မချစ်ဖူးနှိပ်တယ်ပေါ့<br>ပါရိုက်ခံချင်နေတာလား 😤👊
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+
+    <script>
+        const mainSection = document.getElementById('main-section');
+        const loveBox = document.getElementById('love-box');
+        const waitingGif = document.getElementById('waiting-gif-box');
+        const happyGif = document.getElementById('happy-gif-box');
+        const sadGif = document.getElementById('sad-gif-box');
+        const sweetText = document.getElementById('sweet-text');
+        const jokeText = document.getElementById('joke-text');
+        const homeButton = document.getElementById('home-button');
+
+        function showLoveButtons() {
+            mainSection.style.display = 'none';
+            loveBox.style.display = 'flex';
+            setTimeout(() => { loveBox.style.opacity = '1'; }, 50);
+            waitingGif.style.display = 'block'; 
+            homeButton.style.display = 'flex'; 
+        }
+
+        function playLoveEffect(event) {
+            waitingGif.style.display = 'none'; 
+            happyGif.style.display = 'block';  
+            sadGif.style.display = 'none';    
+            jokeText.style.display = 'none'; 
+            sweetText.style.display = 'block'; 
+
+            createBurstParticles(['❤️', '💖', '💝'], event.clientX, event.clientY);
+        }
+
+        function playAngryEffect(button, event) {
+            waitingGif.style.display = 'none'; 
+            happyGif.style.display = 'none';   
+            sadGif.style.display = 'block';    
+            sweetText.style.display = 'none'; 
+            jokeText.style.display = 'block'; 
+
+            button.classList.add('shake-effect');
+            setTimeout(() => { button.classList.remove('shake-effect'); }, 300);
+
+            createBurstParticles(['💢', '😡', '😤'], event.clientX, event.clientY);
+        }
+
+        function createBurstParticles(emojiArray, clickX, clickY) {
+            for (let i = 0; i < 15; i++) {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                
+                p.innerHTML = emojiArray[Math.floor(Math.random() * emojiArray.length)];
+                
+                p.style.left = (clickX - 12) + 'px'; 
+                p.style.top = (clickY - 12) + 'px';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 40 + Math.random() * 90; 
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance;
+                
+                p.style.setProperty('--x', `${x}px`);
+                p.style.setProperty('--y', `${y}px`);
+                
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 1500);
+            }
+        }
+
+        function goBackToMain() {
+            loveBox.style.display = 'none';
+            loveBox.style.opacity = '0';
+            happyGif.style.display = 'none';
+            sadGif.style.display = 'none';
+            jokeText.style.display = 'none';
+            sweetText.style.display = 'none';
+            waitingGif.style.display = 'none';
+            homeButton.style.display = 'none'; 
+
+            mainSection.style.display = 'flex';
+        }
+    </script>
 
 </body>
 </html>
