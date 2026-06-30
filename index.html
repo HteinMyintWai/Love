@@ -59,6 +59,7 @@
             z-index: 9999;
         }
 
+        /* 🟢 Firebase Indicator */
         .status-dot {
             width: 12px;
             height: 12px;
@@ -86,13 +87,14 @@
             100% { transform: scale(2.5); opacity: 0; }
         }
 
-        .btn-home, .btn-settings, .btn-outline, .ios-btn {
+        .btn-home, .btn-settings, .btn-outline {
             -webkit-tap-highlight-color: transparent !important;
             -webkit-appearance: none;
             appearance: none;
             outline: none;
         }
 
+        /* 🏡 ပင်မခလုတ် ပုံစံပြင်ဆင်ခြင်း */
         .btn-home {
             display: none; 
             background: #ffffff;
@@ -105,8 +107,14 @@
             justify-content: center;
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 20px;
+        }
+        .btn-home:hover {
+            background: #007bff;
+            transform: scale(1.1);
         }
 
+        /* ⚙️ Settings ခလုတ် ပုံစံ */
         .btn-settings {
             background: #ffffff;
             border: none;
@@ -118,8 +126,11 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             font-size: 20px;
+        }
+        .btn-settings:hover {
+            transform: rotate(45deg);
         }
         
         .settings-panel {
@@ -263,7 +274,7 @@
     <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
     <script>
-        // ⚠️ သင့်ရဲ့ love-kho Project အသစ်အတွက် အမှန်ကန်ဆုံး ပြင်ဆင်ပေးထားသည့် Config
+        // ⚠️ love-kho Project Config
         const firebaseConfig = {
             apiKey: "AIzaSyCz-uMdt2UvHRbfV10_oQJTaBieWasPqKk",
             authDomain: "love-kho.firebaseapp.com",
@@ -294,7 +305,7 @@
         const audioLove = document.getElementById('audio-love');
         const audioNotLove = document.getElementById('audio-not-love');
 
-        // မီးစိမ်းရန် စောင့်ကြည့်စစ်ဆေးခြင်း
+        // မီးစိမ်းရန် စောင့်ကြည့်ခြင်း
         database.ref('.info/connected').on('value', (snapshot) => {
             if (snapshot.val() === true) {
                 dbStatusDot.classList.add('connected');
@@ -315,7 +326,6 @@
             }
         });
 
-        // 🔓 Password လုံးဝမလိုဘဲ ပွင့်စေသောစနစ်
         function toggleSettings() {
             settingsPanel.style.display = (settingsPanel.style.display === 'block') ? 'none' : 'block';
         }
@@ -328,11 +338,13 @@
             if(audioMain.src) audioMain.play().catch(e => {});
         }
 
+        // 🏡 ပင်မစာမျက်နှာသို့ ပြန်သွားရန် စနစ်
         function goBackToMain() {
             loveBox.style.display = 'none';
             mainSection.style.display = 'flex';
             waitingGif.style.display = 'none'; happyGif.style.display = 'none'; sadGif.style.display = 'none';
-            sweetText.style.display = 'none'; jokeText.style.display = 'none'; homeButton.style.display = 'none';
+            sweetText.style.display = 'none'; jokeText.style.display = 'none'; 
+            homeButton.style.display = 'none'; // ပင်မစာမျက်နှာမှာ ခလုတ်ပြန်ဖျောက်မယ်
             document.querySelector('.buttons-row').style.display = 'flex';
             audioLove.pause(); audioNotLove.pause();
             if(audioMain.src) audioMain.play();
@@ -341,7 +353,8 @@
         function playLoveEffect(e) {
             document.querySelector('.buttons-row').style.display = 'none';
             waitingGif.style.display = 'none'; happyGif.style.display = 'block';
-            sweetText.style.display = 'block'; homeButton.style.display = 'flex';
+            sweetText.style.display = 'block'; 
+            homeButton.style.display = 'flex'; // 🏡 ခလုတ်ကို ပေါ်လာအောင်လုပ်ခြင်း
             audioMain.pause(); if(audioLove.src) audioLove.play();
             createHearts(e);
         }
@@ -349,7 +362,8 @@
         function playAngryEffect(e) {
             document.querySelector('.buttons-row').style.display = 'none';
             waitingGif.style.display = 'none'; sadGif.style.display = 'block';
-            jokeText.style.display = 'block'; homeButton.style.display = 'flex';
+            jokeText.style.display = 'block'; 
+            homeButton.style.display = 'flex'; // 🏡 ခလုတ်ကို ပေါ်လာအောင်လုပ်ခြင်း
             audioMain.pause(); if(audioNotLove.src) audioNotLove.play();
         }
 
@@ -369,15 +383,19 @@
             if (!input.files || !input.files[0]) return;
             uploadStatus.style.display = 'block';
             uploadStatus.innerText = "Firebase သို့ သိမ်းဆည်းနေပါသည်... 💾";
+            const file = input.files[0];
             const reader = new FileReader();
             reader.onload = function(e) {
                 database.ref('audioTracks/' + trackType).set(e.target.result)
                 .then(() => {
                     uploadStatus.innerText = "အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ! 🎉";
                     setTimeout(() => uploadStatus.style.display = 'none', 2000);
+                })
+                .catch(err => {
+                    uploadStatus.innerText = "Error: " + err.message;
                 });
             };
-            reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL(file);
         }
     </script>
 </body>
