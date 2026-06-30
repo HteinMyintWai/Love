@@ -20,20 +20,19 @@
         }
 
         .wrapper {
-            display: grid;
-            grid-template-columns: 1fr;
-            grid-template-rows: 1fr;
-            align-items: center;
-            justify-items: center;
+            position: relative;
             width: 100%;
             max-width: 360px;
-            min-height: 480px; 
+            height: auto;
+            min-height: 400px;
             padding: 20px;
             box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .page-section {
-            grid-area: 1 / 1 / 2 / 2;
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -41,12 +40,11 @@
             justify-content: center;
             text-align: center;
             box-sizing: border-box;
-            transition: opacity 0.3s ease;
         }
 
+        /* ❌ ဒုတိယစာမျက်နှာကို အစတွင် ဖျောက်ထားမည် */
         #love-box {
             display: none;
-            opacity: 0;
         }
 
         .top-controls {
@@ -59,7 +57,7 @@
             z-index: 9999;
         }
 
-        /* 🟢 Firebase Indicator */
+        /* 🟢 Firebase အခြေအနေပြ မီးလုံး */
         .status-dot {
             width: 12px;
             height: 12px;
@@ -94,7 +92,7 @@
             outline: none;
         }
 
-        /* 🏡 ပင်မခလုတ် ပုံစံပြင်ဆင်ခြင်း */
+        /* 🏡 ပင်မခလုတ် ပုံစံ */
         .btn-home {
             display: none; 
             background: #ffffff;
@@ -106,12 +104,8 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             font-size: 20px;
-        }
-        .btn-home:hover {
-            background: #007bff;
-            transform: scale(1.1);
         }
 
         /* ⚙️ Settings ခလုတ် ပုံစံ */
@@ -128,9 +122,6 @@
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
             transition: all 0.3s ease;
             font-size: 20px;
-        }
-        .btn-settings:hover {
-            transform: rotate(45deg);
         }
         
         .settings-panel {
@@ -161,7 +152,7 @@
             display: block;
         }
 
-        #waiting-gif-box { display: none; }
+        #waiting-gif-box { display: block; }
         .gif-surprise { display: none; }
 
         .question-text {
@@ -183,18 +174,25 @@
         #sweet-text { color: #ff758c; }
         #joke-text { color: #e60033; }
 
+        /* ✨ ခလုတ်များ ပုံစံသတ်မှတ်ချက် */
         .btn-outline {
-            background: transparent;
+            background: #ffffff;
             font-size: 16px;
             font-weight: bold;
             padding: 12px 24px;
             border-radius: 25px;
             cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
         }
         .btn-main { border: 2px solid #0056b3; color: #0056b3; }
-        .buttons-row { display: flex; gap: 15px; justify-content: center; width: 100%; }
+        .buttons-row { display: flex; gap: 15px; justify-content: center; width: 100%; margin-top: 10px; }
         .btn-love { border: 2px solid #007bff; color: #007bff; }
         .btn-not-love { border: 2px solid #6c757d; color: #6c757d; }
+
+        .btn-outline:active {
+            transform: scale(0.95);
+        }
 
         .particle {
             position: absolute;
@@ -261,7 +259,7 @@
                 <div class="tenor-gif-embed" data-postid="4822939937925547997" data-width="100%"></div>
             </div>
             
-            <div class="buttons-row">
+            <div class="buttons-row" id="choice-buttons">
                 <button type="button" class="btn-outline btn-love" onclick="playLoveEffect(event)">အရမ်းချစ်တယ်</button>
                 <button type="button" class="btn-outline btn-not-love" onclick="playAngryEffect(event)">မချစ်ဖူး</button>
             </div>
@@ -294,6 +292,7 @@
         const waitingGif = document.getElementById('waiting-gif-box');
         const happyGif = document.getElementById('happy-gif-box');
         const sadGif = document.getElementById('sad-gif-box');
+        const choiceButtons = document.getElementById('choice-buttons');
         const sweetText = document.getElementById('sweet-text');
         const jokeText = document.getElementById('joke-text');
         const homeButton = document.getElementById('home-button');
@@ -333,38 +332,41 @@
         function showLoveButtons() {
             mainSection.style.display = 'none';
             loveBox.style.display = 'flex';
-            loveBox.style.opacity = '1';
             waitingGif.style.display = 'block';
+            happyGif.style.display = 'none';
+            sadGif.style.display = 'none';
+            choiceButtons.style.display = 'flex';
+            sweetText.style.display = 'none';
+            jokeText.style.display = 'none';
+            homeButton.style.display = 'none';
             if(audioMain.src) audioMain.play().catch(e => {});
         }
 
-        // 🏡 ပင်မစာမျက်နှာသို့ ပြန်သွားရန် စနစ်
         function goBackToMain() {
             loveBox.style.display = 'none';
             mainSection.style.display = 'flex';
-            waitingGif.style.display = 'none'; happyGif.style.display = 'none'; sadGif.style.display = 'none';
-            sweetText.style.display = 'none'; jokeText.style.display = 'none'; 
-            homeButton.style.display = 'none'; // ပင်မစာမျက်နှာမှာ ခလုတ်ပြန်ဖျောက်မယ်
-            document.querySelector('.buttons-row').style.display = 'flex';
+            homeButton.style.display = 'none'; 
             audioLove.pause(); audioNotLove.pause();
-            if(audioMain.src) audioMain.play();
+            if(audioMain.src) audioMain.play().catch(e => {});
         }
 
         function playLoveEffect(e) {
-            document.querySelector('.buttons-row').style.display = 'none';
-            waitingGif.style.display = 'none'; happyGif.style.display = 'block';
+            choiceButtons.style.display = 'none';
+            waitingGif.style.display = 'none'; 
+            happyGif.style.display = 'block';
             sweetText.style.display = 'block'; 
-            homeButton.style.display = 'flex'; // 🏡 ခလုတ်ကို ပေါ်လာအောင်လုပ်ခြင်း
-            audioMain.pause(); if(audioLove.src) audioLove.play();
+            homeButton.style.display = 'flex'; // 🏡 ခလုတ် ပေါ်လာစေရန်
+            audioMain.pause(); if(audioLove.src) audioLove.play().catch(e => {});
             createHearts(e);
         }
 
         function playAngryEffect(e) {
-            document.querySelector('.buttons-row').style.display = 'none';
-            waitingGif.style.display = 'none'; sadGif.style.display = 'block';
+            choiceButtons.style.display = 'none';
+            waitingGif.style.display = 'none'; 
+            sadGif.style.display = 'block';
             jokeText.style.display = 'block'; 
-            homeButton.style.display = 'flex'; // 🏡 ခလုတ်ကို ပေါ်လာအောင်လုပ်ခြင်း
-            audioMain.pause(); if(audioNotLove.src) audioNotLove.play();
+            homeButton.style.display = 'flex'; // 🏡 ခလုတ် ပေါ်လာစေရန်
+            audioMain.pause(); if(audioNotLove.src) audioNotLove.play().catch(e => {});
         }
 
         function createHearts(e) {
