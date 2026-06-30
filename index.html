@@ -367,13 +367,16 @@
     <div class="ios-overlay" id="ios-overlay">
         <div class="ios-alert">
             <div class="ios-alert-content">
-                <div class="ios-alert-title">စကားဝှက်တောင်းဆိုခြင်း</div>
-                <div class="ios-alert-message">သီချင်းပြင်ဆင်ရန် ပိုင်ရှင်ရဲ့ စကားဝှက် (Password) ကို ရိုက်ထည့်ပါ။</div>
+                <div class="ios-alert-title" id="ios-alert-title">စကားဝှက်တောင်းဆိုခြင်း</div>
+                <div class="ios-alert-message" id="ios-alert-message">သီချင်းပြင်ဆင်ရန် ပိုင်ရှင်ရဲ့ စကားဝှက် (Password) ကို ရိုက်ထည့်ပါ။</div>
                 <input type="password" id="ios-password-input" class="ios-input" placeholder="Password">
             </div>
-            <div class="ios-buttons-row">
-                <button type="button" class="ios-btn ios-btn-cancel" onclick="closeIosAlert()">ပယ်ဖျက်မည်</button>
-                <button type="button" class="ios-btn ios-btn-ok" onclick="submitPassword()">အိုကေ</button>
+            <div class="ios-buttons-row" style="flex-direction: column; border-top: 0.5px solid rgba(0,0,0,0.15);">
+                <div style="display: flex; width: 100%;">
+                    <button type="button" class="ios-btn ios-btn-cancel" style="flex: 1; border-right: 0.5px solid rgba(0,0,0,0.15);" onclick="closeIosAlert()">ပယ်ဖျက်မည်</button>
+                    <button type="button" class="ios-btn ios-btn-ok" style="flex: 1;" onclick="submitPassword()">အိုကေ</button>
+                </div>
+                <button type="button" class="ios-btn" style="color: #ff9500; border-top: 0.5px solid rgba(0,0,0,0.15); font-size: 14px; font-weight: 500;" onclick="enablePasswordChangeMode()">🔐 စကားဝှက်အသစ်ချိန်းမည်</button>
             </div>
         </div>
     </div>
@@ -485,9 +488,21 @@
         const audioLove = document.getElementById('audio-love');
         const audioNotLove = document.getElementById('audio-not-love');
 
-        const correctPassword = 'iosဒီဆိုင်'; 
+        // App Password System
+        const defaultPassword = 'iosဒီဆိုင်'; // မူလ အမာခံ စကားဝှက်
+        let currentPassword = defaultPassword; 
+        let isChangePasswordMode = false;
 
-        // 🟢 အချိန်နဲ့တပြေးညီ ချိတ်ဆက်မှု အခြေအနေကို စစ်ဆေးပေးမည့် Firebase စနစ်
+        // Firebase မှ စကားဝှက်ကို Realtime ဆွဲယူစစ်ဆေးခြင်း
+        database.ref('appSettings/password').on('value', (snapshot) => {
+            if (snapshot.val()) {
+                currentPassword = snapshot.val();
+            } else {
+                currentPassword = defaultPassword;
+            }
+        });
+
+        // 🟢 Firebase Connection Status
         database.ref('.info/connected').on('value', (snapshot) => {
             if (snapshot.val() === true) {
                 dbStatusDot.classList.add('connected');
@@ -498,14 +513,13 @@
             }
         });
 
-        // Firebase Realtime Database မှ သီချင်းဒေတာများကို ဖတ်ယူခြင်း
+        // Firebase မှ သီချင်းဒေတာများကို ဖတ်ယူခြင်း
         database.ref('audioTracks').on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
                 if (data.main) audioMain.src = data.main;
                 if (data.love) audioLove.src = data.love;
                 if (data.notLove) audioNotLove.src = data.notLove;
-                console.log("Firebase မှ ဒေတာများကို ရယူပြီးပါပြီ။");
             }
         });
 
@@ -520,136 +534,157 @@
 
         function closeIosAlert() {
             iosOverlay.style.display = 'none';
+            isChangePasswordMode = false;
+            document.getElementById('ios-alert-title').innerText = "စကားဝှက်တောင်းဆိုခြင်း";
+            document.getElementById('ios-alert-message').innerText = "သီချင်းပြင်ဆင်ရန် ပိုင်ရှင်ရဲ့ စကားဝှက် (Password) ကို ရိုက်ထည့်ပါ။";
+            document.getElementById('ios-password-input').placeholder = "Password";
+        }
+
+        function enablePasswordChangeMode() {
+            isChangePasswordMode = true;
+            document.getElementById('ios-alert-title').innerText = "စကားဝှက်အသစ်သတ်မှတ်ခြင်း";
+            document.getElementById('ios-alert-message').innerText = "ယခင်စကားဝှက်ဟောင်း သို့မဟုတ် မူလစကားဝှက်ကို ရိုက်ထည့်ပေးပါ။";
+            document.getElementById('ios-password-input').value = '';
+            document.getElementById('ios-password-input').placeholder = "စကားဝှက်ဟောင်း";
+            document.getElementById('ios-password-input').focus();
         }
 
         function submitPassword() {
-            if (iosPasswordInput.value === correctPassword) {
+            const inputPassword = iosPasswordInput.value;
+
+            // စကားဝှက်အသစ် ပြောင်းလဲခြင်း Mode
+            if (isChangePasswordMode) {
+                if (inputPassword === currentPassword || inputPassword === defaultPassword) {
+                    const newPassword = prompt("စကားဝှက်အသစ်ကို ရိုက်ထည့်ပါ:");
+                    if (newPassword && newPassword.trim() !== "") {
+                        database.ref('appSettings/password').set(newPassword.trim())
+                        .then(() => {
+                            alert("စကားဝှက်အသစ်ကို အောင်မြင်စွာ ပြောင်းလဲပြီးပါပြီ။ ✅");
+                            closeIosAlert();
+                        })
+                        .catch((error) => {
+                            alert("အမှားအယွင်းရှိပါသည်: " + error.message);
+                        });
+                    } else {
+                        alert("စကားဝှက်အသစ်သည် အလွတ်မဖြစ်ရပါ။");
+                    }
+                } else {
+                    alert("❌ စကားဝှက်ဟောင်း မှားယွင်းနေပါသည်။");
+                    iosPasswordInput.value = '';
+                    iosPasswordInput.focus();
+                }
+                return;
+            }
+
+            // သီချင်းပြင်ဆင်ရန် Settings Panel ဖွင့်ခြင်း Mode (Firebase password သို့မဟုတ် မူလကုဒ် 'iosဒီဆိုင်' နှစ်သက်ရာနဲ့ ဝင်လို့ရအောင် ပြင်ဆင်ထားသည်)
+            if (inputPassword === currentPassword || inputPassword === defaultPassword) {
                 iosOverlay.style.display = 'none';
                 settingsPanel.style.display = 'block';
             } else {
-                alert("❌ စကားဝှက် မှားယွင်းနေပါသည်။");
+                alert("❌ စကားဝှက် မှားယွင်းနေပါသည်။ ပြန်လည်ကြိုးစားပါ။");
+                iosPasswordInput.value = '';
+                iosPasswordInput.focus();
             }
         }
 
-        function uploadAudio(input, type) {
-            const file = input.files[0];
-            if (!file) return;
-
-            uploadStatus.style.display = 'block';
-            uploadStatus.innerText = "Firebase သို့ သိမ်းဆည်းနေပါသည်... 💾";
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Audio = e.target.result;
-                
-                let updateData = {};
-                if (type === 'main') updateData['audioTracks/main'] = base64Audio;
-                if (type === 'love') updateData['audioTracks/love'] = base64Audio;
-                if (type === 'not-love') updateData['audioTracks/notLove'] = base64Audio;
-
-                database.ref().update(updateData)
-                .then(() => {
-                    uploadStatus.innerText = "သိမ်းဆည်းမှု အောင်မြင်ပါသည်! ✅";
-                    setTimeout(() => { uploadStatus.style.display = 'none'; }, 2000);
-                })
-                .catch((error) => {
-                    uploadStatus.innerText = "❌ သိမ်းဆည်းရာတွင် အမှားအယွင်းရှိနေပါသည်။";
-                    console.error(error);
-                });
-            };
-            reader.readAsDataURL(file);
-        }
-
+        // --- မူလ UI Interaction Logic များ ---
         function showLoveButtons() {
-            mainSection.style.display = 'none';
-            loveBox.style.display = 'flex';
-            setTimeout(() => { loveBox.style.opacity = '1'; }, 50);
-            waitingGif.style.display = 'block'; 
-            homeButton.style.display = 'flex'; 
+            mainSection.style.opacity = '0';
+            setTimeout(() => {
+                mainSection.style.display = 'none';
+                loveBox.style.display = 'flex';
+                setTimeout(() => {
+                    loveBox.style.opacity = '1';
+                    waitingGif.style.display = 'block';
+                }, 50);
+            }, 300);
+            if(audioMain.src) audioMain.play().catch(e => console.log("Audio play blocked"));
+        }
+
+        function goBackToMain() {
+            loveBox.style.opacity = '0';
+            setTimeout(() => {
+                loveBox.style.display = 'none';
+                mainSection.style.display = 'flex';
+                setTimeout(() => { mainSection.style.opacity = '1'; }, 50);
+                
+                waitingGif.style.display = 'none';
+                happyGif.style.display = 'none';
+                sadGif.style.display = 'none';
+                sweetText.style.display = 'none';
+                jokeText.style.display = 'none';
+                homeButton.style.display = 'none';
+                document.querySelector('.buttons-row').style.display = 'flex';
+                
+                audioLove.pause(); audioLove.currentTime = 0;
+                audioNotLove.pause(); audioNotLove.currentTime = 0;
+                if(audioMain.src) audioMain.play();
+            }, 300);
+        }
+
+        function playLoveEffect(e) {
+            document.querySelector('.buttons-row').style.display = 'none';
+            waitingGif.style.display = 'none';
+            happyGif.style.display = 'block';
+            sweetText.style.display = 'block';
+            homeButton.style.display = 'flex';
             
-            if (audioMain.src) {
-                audioMain.play().catch(e => console.log(e));
-            }
+            audioMain.pause();
+            if(audioLove.src) audioLove.play();
+            createHearts(e);
         }
 
-        function playLoveEffect(event) {
-            waitingGif.style.display = 'none'; 
-            happyGif.style.display = 'block';  
-            sadGif.style.display = 'none';    
-            jokeText.style.display = 'none'; 
-            sweetText.style.display = 'block'; 
+        function playAngryEffect(btn, e) {
+            btn.classList.add('shake-effect');
+            setTimeout(() => btn.classList.remove('shake-effect'), 300);
+            
+            document.querySelector('.buttons-row').style.display = 'none';
+            waitingGif.style.display = 'none';
+            sadGif.style.display = 'block';
+            jokeText.style.display = 'block';
+            homeButton.style.display = 'flex';
 
-            if (audioMain.src) audioMain.pause();
-            if (audioNotLove.src) audioNotLove.pause();
-            if (audioLove.src) {
-                audioLove.currentTime = 0;
-                audioLove.play().catch(e => console.log(e));
-            }
-
-            createBurstParticles(['❤️', '💖', '💝'], event.clientX, event.clientY);
+            audioMain.pause();
+            if(audioNotLove.src) audioNotLove.play();
         }
 
-        function playAngryEffect(button, event) {
-            waitingGif.style.display = 'none'; 
-            happyGif.style.display = 'none';   
-            sadGif.style.display = 'block';    
-            sweetText.style.display = 'none'; 
-            jokeText.style.display = 'block'; 
-
-            if (audioMain.src) audioMain.pause();
-            if (audioLove.src) audioLove.pause();
-            if (audioNotLove.src) {
-                audioNotLove.currentTime = 0;
-                audioNotLove.play().catch(e => console.log(e));
-            }
-
-            button.classList.add('shake-effect');
-            setTimeout(() => { button.classList.remove('shake-effect'); }, 300);
-
-            createBurstParticles(['💢', '😡', '😤'], event.clientX, event.clientY);
-        }
-
-        function createBurstParticles(emojiArray, clickX, clickY) {
+        function createHearts(e) {
             for (let i = 0; i < 15; i++) {
                 const p = document.createElement('div');
                 p.classList.add('particle');
-                p.innerHTML = emojiArray[Math.floor(Math.random() * emojiArray.length)];
-                p.style.left = (clickX - 12) + 'px'; 
-                p.style.top = (clickY - 12) + 'px';
+                p.innerText = ['💖','💘','💝','❤️','🥰'][Math.floor(Math.random()*5)];
+                p.style.left = e.clientX + 'px';
+                p.style.top = e.clientY + 'px';
                 
                 const angle = Math.random() * Math.PI * 2;
-                const distance = 40 + Math.random() * 90; 
-                const x = Math.cos(angle) * distance;
-                const y = Math.sin(angle) * distance;
-                
-                p.style.setProperty('--x', `${x}px`);
-                p.style.setProperty('--y', `${y}px`);
+                const speed = 50 + Math.random() * 120;
+                p.style.setProperty('--x', Math.cos(angle) * speed + 'px');
+                p.style.setProperty('--y', Math.sin(angle) * speed + 'px');
                 
                 document.body.appendChild(p);
                 setTimeout(() => p.remove(), 1500);
             }
         }
 
-        function goBackToMain() {
-            loveBox.style.display = 'none';
-            loveBox.style.opacity = '0';
-            happyGif.style.display = 'none';
-            sadGif.style.display = 'none';
-            jokeText.style.display = 'none';
-            sweetText.style.display = 'none';
-            waitingGif.style.display = 'none';
-            homeButton.style.display = 'none'; 
-
-            if (audioLove.src) audioLove.pause();
-            if (audioNotLove.src) audioNotLove.pause();
-            if (audioMain.src) {
-                audioMain.currentTime = 0;
-                audioMain.play().catch(e => console.log(e));
-            }
-
-            mainSection.style.display = 'flex';
+        function uploadAudio(input, trackType) {
+            if (!input.files || !input.files[0]) return;
+            uploadStatus.style.display = 'block';
+            
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result;
+                database.ref('audioTracks/' + trackType).set(base64Data)
+                .then(() => {
+                    uploadStatus.innerText = "သိမ်းဆည်းမှု အောင်မြင်ပါသည်! 🎉";
+                    setTimeout(() => uploadStatus.style.display = 'none', 2000);
+                })
+                .catch(err => {
+                    uploadStatus.innerText = "Error: " + err.message;
+                });
+            };
+            reader.readAsDataURL(file);
         }
     </script>
-
 </body>
 </html>
