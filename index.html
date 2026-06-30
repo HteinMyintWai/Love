@@ -42,7 +42,6 @@
             box-sizing: border-box;
         }
 
-        /* ❌ ဒုတိယစာမျက်နှာကို အစတွင် ဖျောက်ထားမည် */
         #love-box {
             display: none;
         }
@@ -57,7 +56,7 @@
             z-index: 9999;
         }
 
-        /* 🟢 Firebase အခြေအနေပြ မီးလုံး */
+        /* 🟢 Firebase Indicator */
         .status-dot {
             width: 12px;
             height: 12px;
@@ -92,7 +91,7 @@
             outline: none;
         }
 
-        /* 🏡 ပင်မခလုတ် ပုံစံ */
+        /* 🏡 ပင်မခလုတ် */
         .btn-home {
             display: none; 
             background: #ffffff;
@@ -108,7 +107,7 @@
             font-size: 20px;
         }
 
-        /* ⚙️ Settings ခလုတ် ပုံစံ */
+        /* ⚙️ Settings ခလုတ် */
         .btn-settings {
             background: #ffffff;
             border: none;
@@ -147,8 +146,8 @@
             margin-bottom: 25px;
             border-radius: 15px;
             overflow: hidden;
-            width: 220px;  
-            height: 220px; 
+            width: 180px;  
+            height: 180px; 
             display: block;
         }
 
@@ -174,7 +173,6 @@
         #sweet-text { color: #ff758c; }
         #joke-text { color: #e60033; }
 
-        /* ✨ ခလုတ်များ ပုံစံသတ်မှတ်ချက် */
         .btn-outline {
             background: #ffffff;
             font-size: 16px;
@@ -350,23 +348,33 @@
             if(audioMain.src) audioMain.play().catch(e => {});
         }
 
+        // 💖 "အရမ်းချစ်တယ်" ကို နှိပ်လျှင် - တခြားအကျိုးသက်ရောက်မှုဟောင်းများကို အကုန်ရှင်းလင်းပြီးမှ အသစ်ပြမည်
         function playLoveEffect(e) {
-            choiceButtons.style.display = 'none';
             waitingGif.style.display = 'none'; 
-            happyGif.style.display = 'block';
-            sweetText.style.display = 'block'; 
-            homeButton.style.display = 'flex'; // 🏡 ခလုတ် ပေါ်လာစေရန်
-            audioMain.pause(); if(audioLove.src) audioLove.play().catch(e => {});
+            sadGif.style.display = 'none'; // စိတ်ဆိုးတဲ့ GIF ဖျောက်မယ်
+            jokeText.style.display = 'none';   // မချစ်ဖူး စာသားဖျောက်မယ်
+            
+            happyGif.style.display = 'block'; // ပျော်တဲ့ GIF ပြမယ်
+            sweetText.style.display = 'block'; // အချစ်စာသား ပြမယ်
+            homeButton.style.display = 'flex'; 
+            
+            audioMain.pause(); audioNotLove.pause();
+            if(audioLove.src) audioLove.play().catch(e => {});
             createHearts(e);
         }
 
+        // 👊 "မချစ်ဖူး" ကို နှိပ်လျှင် - အချစ် Effect ဟောင်းများကို အကုန်ပြန်ဖျောက်ပြီးမှ စိတ်ဆိုးပြမည်
         function playAngryEffect(e) {
-            choiceButtons.style.display = 'none';
             waitingGif.style.display = 'none'; 
-            sadGif.style.display = 'block';
-            jokeText.style.display = 'block'; 
-            homeButton.style.display = 'flex'; // 🏡 ခလုတ် ပေါ်လာစေရန်
-            audioMain.pause(); if(audioNotLove.src) audioNotLove.play().catch(e => {});
+            happyGif.style.display = 'none'; // ပျော်တဲ့ GIF ဖျောက်မယ်
+            sweetText.style.display = 'none'; // အချစ်စာသား ဖျောက်မယ်
+            
+            sadGif.style.display = 'block';  // စိတ်ဆိုးတဲ့ GIF ပြမယ်
+            jokeText.style.display = 'block'; // မချစ်ဖူး စာသား ပြမယ်
+            homeButton.style.display = 'flex'; 
+            
+            audioMain.pause(); audioLove.pause();
+            if(audioNotLove.src) audioNotLove.play().catch(e => {});
         }
 
         function createHearts(e) {
