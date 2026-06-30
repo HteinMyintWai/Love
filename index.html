@@ -13,8 +13,11 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow: hidden;
+            position: relative;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         /* ပင်မ Container Wrapper */
@@ -49,12 +52,26 @@
             opacity: 0;
         }
 
-        /* ညာဘက်အပေါ်ထောင့်တွင် ပုံသေတည်ရှိနေမည့် Home Button */
-        .btn-home {
-            display: none; 
-            position: fixed; 
+        /* ညာဘက်အပေါ်ထောင့်တွင် ပုံသေတည်ရှိနေမည့် Control Buttons Wrapper */
+        .top-controls {
+            position: fixed;
             top: 20px;
             right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 9999;
+        }
+
+        /* iOS Tap Highlight ဖျောက်ရန် */
+        .btn-home, .btn-settings, .btn-outline, .ios-btn {
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+        }
+
+        .btn-home {
+            display: none; 
             background: #ffffff;
             border: none;
             width: 42px;
@@ -65,9 +82,100 @@
             justify-content: center;
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 9999; 
+        }
+
+        /* Settings Button */
+        .btn-settings {
+            background: #ffffff;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 20px;
+        }
+        .btn-settings:hover {
+            transform: rotate(45deg) scale(1.05);
+            background: #007bff;
+            color: white;
         }
         
+        /* Audio Settings Panel */
+        .settings-panel {
+            display: none;
+            position: fixed;
+            top: 75px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            z-index: 9998;
+            width: 260px;
+            font-size: 13px;
+            animation: popIn 0.3s ease;
+        }
+        .settings-panel h4 { margin: 0 0 10px 0; color: #2b2d42; border-bottom: 1px solid #eee; padding-bottom: 5px;}
+        .audio-group { margin-bottom: 10px; text-align: left; }
+        .audio-group label { display: block; margin-bottom: 3px; font-weight: bold; color: #555; }
+        .audio-group input { width: 100%; font-size: 11px; }
+
+        /* iOS-Style Alert Dialog */
+        .ios-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        .ios-alert {
+            background: rgba(255, 255, 255, 0.9);
+            width: 270px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            animation: popIn 0.25s cubic-bezier(0.1, 0.8, 0.25, 1);
+            overflow: hidden;
+        }
+        .ios-alert-content { padding: 20px 16px; }
+        .ios-alert-title { font-weight: 600; font-size: 17px; color: #000; margin-bottom: 4px; }
+        .ios-alert-message { font-size: 13px; color: #000; margin-bottom: 15px; }
+        .ios-input {
+            width: 100%;
+            padding: 6px 8px;
+            box-sizing: border-box;
+            border: 0.5px solid rgba(0,0,0,0.2);
+            background: #fff;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            outline: none;
+        }
+        .ios-buttons-row {
+            display: flex;
+            border-top: 0.5px solid rgba(0,0,0,0.15);
+        }
+        .ios-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            font-size: 17px;
+            cursor: pointer;
+        }
+        .ios-btn-cancel { color: #007ff9; border-right: 0.5px solid rgba(0,0,0,0.15); font-weight: 400; }
+        .ios-btn-ok { color: #007ff9; font-weight: 600; }
+        .ios-btn:active { background: rgba(0,0,0,0.05); }
+
         /* CSS Home Icon */
         .home-icon {
             position: relative;
@@ -109,7 +217,7 @@
         .btn-home:hover .home-icon:after { background: #007bff; }
         .btn-home:active { transform: translateY(-1px) scale(0.98); }
 
-        /* GIF Container အရွယ်အစား ပုံသေ */
+        /* GIF Container */
         .gif-container {
             margin-bottom: 25px;
             border-radius: 15px;
@@ -122,7 +230,6 @@
         #waiting-gif-box { display: none; }
         .gif-surprise { display: none; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); }
 
-        /* စာသားနေရာ */
         .question-text {
             font-size: 20px;
             font-weight: bold;
@@ -131,7 +238,6 @@
             line-height: 1.4;
         }
 
-        /* ဘုံသုံး ရလဒ်စာသား Layout */
         .result-text {
             display: none; 
             font-size: 17px;
@@ -142,7 +248,6 @@
             animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
         }
 
-        /* "အရမ်းချစ်တယ်" နှိပ်ရင် ထွက်လာမယ့် အချစ်ကဗျာဆန်စာသားအလှ */
         #sweet-text {
             background: linear-gradient(45deg, #ff007f 0%, #ff758c 50%, #ffb300 100%);
             -webkit-background-clip: text;
@@ -150,7 +255,6 @@
             filter: drop-shadow(0px 2px 5px rgba(255, 117, 140, 0.4));
         }
 
-        /* "မချစ်ဖူး" နှိပ်ရင် ထွက်လာမယ့် စနောက်ကျီစယ်စာသားအလှ */
         #joke-text {
             background: linear-gradient(45deg, #e60033 0%, #ff4d6d 100%);
             -webkit-background-clip: text;
@@ -158,7 +262,6 @@
             filter: drop-shadow(0px 2px 4px rgba(230, 0, 51, 0.3));
         }
 
-        /* ဘုံသုံး ခလုတ်ဒီဇိုင်း */
         .btn-outline {
             background: transparent;
             font-size: 16px;
@@ -168,9 +271,6 @@
             cursor: pointer;
             position: relative;
             transition: all 0.2s ease;
-            user-select: none;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
             white-space: nowrap;
         }
         .btn-outline:active { transform: scale(0.95) translateY(2px) !important; box-shadow: none !important; }
@@ -195,12 +295,13 @@
         .btn-not-love { border: 2px solid #6c757d; color: #6c757d; box-shadow: 0 3px 0 #bcbfc2; }
         .btn-not-love:hover { background-color: rgba(108, 117, 125, 0.05); }
 
-        /* Animations */
+        /* PopIn Animation */
         @keyframes popIn {
             from { opacity: 0; transform: scale(0.8); }
             to { opacity: 1; transform: scale(1); }
         }
 
+        /* Shake Effect */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             20%, 60% { transform: translateX(-5px); }
@@ -208,7 +309,7 @@
         }
         .shake-effect { animation: shake 0.3s ease-in-out; }
 
-        /* ဖြည်းဖြည်းချင်း ဖျာထွက်မယ့် Particle စနစ် */
+        /* ဖျာထွက်မယ့် Particle စနစ် (iOS ပြင်ဆင်ပြီး) */
         .particle {
             position: absolute;
             font-size: 24px;
@@ -235,9 +336,46 @@
 </head>
 <body>
 
-    <button type="button" class="btn-home" id="home-button" onclick="goBackToMain()" title="ပင်မစာမျက်နှာသို့">
-        <div class="home-icon"></div>
-    </button>
+    <div class="top-controls">
+        <button type="button" class="btn-settings" onclick="openIosAlert()" title="သီချင်းရွေးရန်">⚙️</button>
+        <button type="button" class="btn-home" id="home-button" onclick="goBackToMain()" title="ပင်မစာမျက်နှာသို့">
+            <div class="home-icon"></div>
+        </button>
+    </div>
+
+    <div class="ios-overlay" id="ios-overlay">
+        <div class="ios-alert">
+            <div class="ios-alert-content">
+                <div class="ios-alert-title">စကားဝှက်တောင်းဆိုခြင်း</div>
+                <div class="ios-alert-message">သီချင်းပြင်ဆင်ရန် ပိုင်ရှင်ရဲ့ စကားဝှက် (Password) ကို ရိုက်ထည့်ပါ။</div>
+                <input type="password" id="ios-password-input" class="ios-input" placeholder="Password">
+            </div>
+            <div class="ios-buttons-row">
+                <button type="button" class="ios-btn ios-btn-cancel" onclick="closeIosAlert()">ပယ်ဖျက်မည်</button>
+                <button type="button" class="ios-btn ios-btn-ok" onclick="submitPassword()">အိုကေ</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-panel" id="settings-panel">
+        <h4>သီချင်းရွေးချယ်ရန် 🎵</h4>
+        <div class="audio-group">
+            <label>ပင်မနောက်ခံသီချင်း:</label>
+            <input type="file" id="main-audio-file" accept="audio/*" onchange="loadAudio(this, 'main')">
+        </div>
+        <div class="audio-group">
+            <label>"အရမ်းချစ်တယ်" သီချင်း:</label>
+            <input type="file" id="love-audio-file" accept="audio/*" onchange="loadAudio(this, 'love')">
+        </div>
+        <div class="audio-group">
+            <label>"မချစ်ဖူး" သီချင်း:</label>
+            <input type="file" id="not-love-audio-file" accept="audio/*" onchange="loadAudio(this, 'not-love')">
+        </div>
+    </div>
+
+    <audio id="audio-main" loop></audio>
+    <audio id="audio-love"></audio>
+    <audio id="audio-not-love"></audio>
 
     <div class="wrapper">
         <div class="page-section" id="main-section">
@@ -295,6 +433,55 @@
         const sweetText = document.getElementById('sweet-text');
         const jokeText = document.getElementById('joke-text');
         const homeButton = document.getElementById('home-button');
+        const settingsPanel = document.getElementById('settings-panel');
+        
+        const iosOverlay = document.getElementById('ios-overlay');
+        const iosPasswordInput = document.getElementById('ios-password-input');
+
+        // Audio Elements
+        const audioMain = document.getElementById('audio-main');
+        const audioLove = document.getElementById('audio-love');
+        const audioNotLove = document.getElementById('audio-not-love');
+
+        // ပိုင်ရှင်စကားဝှက်
+        const correctPassword = '1234'; 
+
+        function openIosAlert() {
+            if (settingsPanel.style.display === 'block') {
+                settingsPanel.style.display = 'none';
+                return;
+            }
+            iosPasswordInput.value = ''; 
+            iosOverlay.style.display = 'flex';
+        }
+
+        function closeIosAlert() {
+            iosOverlay.style.display = 'none';
+        }
+
+        function submitPassword() {
+            if (iosPasswordInput.value === correctPassword) {
+                iosOverlay.style.display = 'none';
+                settingsPanel.style.display = 'block';
+            } else {
+                alert("❌ စကားဝှက် မှားယွင်းနေပါသည်။");
+            }
+        }
+
+        function loadAudio(input, type) {
+            const file = input.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                if (type === 'main') {
+                    audioMain.src = url;
+                    audioMain.play().catch(e => console.log("Audio play blocked."));
+                } else if (type === 'love') {
+                    audioLove.src = url;
+                } else if (type === 'not-love') {
+                    audioNotLove.src = url;
+                }
+            }
+        }
 
         function showLoveButtons() {
             mainSection.style.display = 'none';
@@ -302,6 +489,10 @@
             setTimeout(() => { loveBox.style.opacity = '1'; }, 50);
             waitingGif.style.display = 'block'; 
             homeButton.style.display = 'flex'; 
+            
+            if (audioMain.src) {
+                audioMain.play().catch(e => console.log(e));
+            }
         }
 
         function playLoveEffect(event) {
@@ -310,6 +501,13 @@
             sadGif.style.display = 'none';    
             jokeText.style.display = 'none'; 
             sweetText.style.display = 'block'; 
+
+            if (audioMain.src) audioMain.pause();
+            if (audioNotLove.src) audioNotLove.pause();
+            if (audioLove.src) {
+                audioLove.currentTime = 0;
+                audioLove.play().catch(e => console.log(e));
+            }
 
             createBurstParticles(['❤️', '💖', '💝'], event.clientX, event.clientY);
         }
@@ -321,12 +519,20 @@
             sweetText.style.display = 'none'; 
             jokeText.style.display = 'block'; 
 
+            if (audioMain.src) audioMain.pause();
+            if (audioLove.src) audioLove.pause();
+            if (audioNotLove.src) {
+                audioNotLove.currentTime = 0;
+                audioNotLove.play().catch(e => console.log(e));
+            }
+
             button.classList.add('shake-effect');
             setTimeout(() => { button.classList.remove('shake-effect'); }, 300);
 
             createBurstParticles(['💢', '😡', '😤'], event.clientX, event.clientY);
         }
 
+        // Particle စနစ် ကုဒ်အပြည့်အစုံ
         function createBurstParticles(emojiArray, clickX, clickY) {
             for (let i = 0; i < 15; i++) {
                 const p = document.createElement('div');
@@ -359,6 +565,13 @@
             sweetText.style.display = 'none';
             waitingGif.style.display = 'none';
             homeButton.style.display = 'none'; 
+
+            if (audioLove.src) audioLove.pause();
+            if (audioNotLove.src) audioNotLove.pause();
+            if (audioMain.src) {
+                audioMain.currentTime = 0;
+                audioMain.play().catch(e => console.log(e));
+            }
 
             mainSection.style.display = 'flex';
         }
