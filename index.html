@@ -59,7 +59,6 @@
             z-index: 9999;
         }
 
-        /* Firebase Indicator */
         .status-dot {
             width: 12px;
             height: 12px;
@@ -122,11 +121,6 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-size: 20px;
         }
-        .btn-settings:hover {
-            transform: rotate(45deg) scale(1.05);
-            background: #007bff;
-            color: white;
-        }
         
         .settings-panel {
             display: none;
@@ -140,103 +134,12 @@
             z-index: 9998;
             width: 260px;
             font-size: 13px;
-            animation: popIn 0.3s ease;
         }
         .settings-panel h4 { margin: 0 0 10px 0; color: #2b2d42; border-bottom: 1px solid #eee; padding-bottom: 5px;}
         .audio-group { margin-bottom: 10px; text-align: left; }
         .audio-group label { display: block; margin-bottom: 3px; font-weight: bold; color: #555; }
         .audio-group input { width: 100%; font-size: 11px; }
         .status-msg { font-size: 11px; color: #28a745; margin-top: 5px; display: none; }
-
-        .ios-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-        }
-        .ios-alert {
-            background: rgba(255, 255, 255, 0.9);
-            width: 270px;
-            border-radius: 14px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            animation: popIn 0.25s cubic-bezier(0.1, 0.8, 0.25, 1);
-            overflow: hidden;
-        }
-        .ios-alert-content { padding: 20px 16px; }
-        .ios-alert-title { font-weight: 600; font-size: 17px; color: #000; margin-bottom: 4px; }
-        .ios-alert-message { font-size: 13px; color: #000; margin-bottom: 15px; }
-        .ios-input {
-            width: 100%;
-            padding: 6px 8px;
-            box-sizing: border-box;
-            border: 0.5px solid rgba(0,0,0,0.2);
-            background: #fff;
-            border-radius: 6px;
-            font-size: 14px;
-            text-align: center;
-            outline: none;
-        }
-        .ios-buttons-row {
-            display: flex;
-            border-top: 0.5px solid rgba(0,0,0,0.15);
-        }
-        .ios-btn {
-            flex: 1;
-            padding: 12px;
-            background: transparent;
-            border: none;
-            font-size: 17px;
-            cursor: pointer;
-        }
-        .ios-btn-cancel { color: #007ff9; border-right: 0.5px solid rgba(0,0,0,0.15); font-weight: 400; }
-        .ios-btn-ok { color: #007ff9; font-weight: 600; }
-        .ios-btn:active { background: rgba(0,0,0,0.05); }
-
-        .home-icon {
-            position: relative;
-            width: 16px;
-            height: 14px;
-            background: #007bff;
-            margin-top: 6px;
-            transition: all 0.3s ease;
-        }
-        .home-icon:before {
-            content: "";
-            position: absolute;
-            top: -10px;
-            left: -4px;
-            width: 0;
-            height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-bottom: 10px solid #007bff;
-            transition: all 0.3s ease;
-        }
-        .home-icon:after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 5px;
-            width: 6px;
-            height: 7px;
-            background: #ffffff;
-        }
-
-        .btn-home:hover {
-            background: #007bff;
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.35);
-        }
-        .btn-home:hover .home-icon { background: #ffffff; }
-        .btn-home:hover .home-icon:before { border-bottom-color: #ffffff; }
-        .btn-home:hover .home-icon:after { background: #007bff; }
-        .btn-home:active { transform: translateY(-1px) scale(0.98); }
 
         .gif-container {
             margin-bottom: 25px;
@@ -248,7 +151,7 @@
         }
 
         #waiting-gif-box { display: none; }
-        .gif-surprise { display: none; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); }
+        .gif-surprise { display: none; }
 
         .question-text {
             font-size: 20px;
@@ -264,23 +167,10 @@
             font-weight: bold;
             margin-top: 25px; 
             line-height: 1.6;
-            width: 100%;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
         }
 
-        #sweet-text {
-            background: linear-gradient(45deg, #ff007f 0%, #ff758c 50%, #ffb300 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 2px 5px rgba(255, 117, 140, 0.4));
-        }
-
-        #joke-text {
-            background: linear-gradient(45deg, #e60033 0%, #ff4d6d 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 2px 4px rgba(230, 0, 51, 0.3));
-        }
+        #sweet-text { color: #ff758c; }
+        #joke-text { color: #e60033; }
 
         .btn-outline {
             background: transparent;
@@ -289,55 +179,21 @@
             padding: 12px 24px;
             border-radius: 25px;
             cursor: pointer;
-            position: relative;
-            transition: all 0.2s ease;
-            white-space: nowrap;
         }
-        .btn-outline:active { transform: scale(0.95) translateY(2px) !important; box-shadow: none !important; }
-
-        .btn-main {
-            border: 2px solid #0056b3;
-            color: #0056b3;
-            box-shadow: 0 0 10px rgba(0, 86, 179, 0.2);
-        }
-        .btn-main:hover { background-color: #0056b3; color: white; box-shadow: 0 0 15px rgba(0, 86, 179, 0.5); }
-
-        .buttons-row {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .btn-love { border: 2px solid #007bff; color: #007bff; box-shadow: 0 3px 0 #b2d4ff; }
-        .btn-love:hover { background-color: rgba(0, 123, 255, 0.05); }
-
-        .btn-not-love { border: 2px solid #6c757d; color: #6c757d; box-shadow: 0 3px 0 #bcbfc2; }
-        .btn-not-love:hover { background-color: rgba(108, 117, 125, 0.05); }
-
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .shake-effect { animation: shake 0.3s ease-in-out; }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
-        }
+        .btn-main { border: 2px solid #0056b3; color: #0056b3; }
+        .buttons-row { display: flex; gap: 15px; justify-content: center; width: 100%; }
+        .btn-love { border: 2px solid #007bff; color: #007bff; }
+        .btn-not-love { border: 2px solid #6c757d; color: #6c757d; }
 
         .particle {
             position: absolute;
             font-size: 24px;
             pointer-events: none;
-            animation: floatOutSlow 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-            z-index: 9999;
+            animation: floatOutSlow 1.5s forwards;
         }
-
         @keyframes floatOutSlow {
-            0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
-            15% { opacity: 1; transform: translate(0, 0) scale(1.2); }
+            0% { transform: scale(0.5); opacity: 0; }
+            15% { opacity: 1; transform: scale(1.2); }
             100% { transform: translate(var(--x), var(--y)) scale(0.4); opacity: 0; }
         }
     </style>
@@ -349,43 +205,23 @@
 
     <div class="top-controls">
         <div class="status-dot" id="db-status-dot" title="Connecting..."></div>
-        
-        <button type="button" class="btn-settings" onclick="openIosAlert()" title="သီချင်းရွေးရန်">⚙️</button>
-        <button type="button" class="btn-home" id="home-button" onclick="goBackToMain()" title="ပင်မစာမျက်နှာသို့">
-            <div class="home-icon"></div>
-        </button>
-    </div>
-
-    <div class="ios-overlay" id="ios-overlay">
-        <div class="ios-alert">
-            <div class="ios-alert-content">
-                <div class="ios-alert-title" id="ios-alert-title">စကားဝှက်တောင်းဆိုခြင်း</div>
-                <div class="ios-alert-message" id="ios-alert-message">သီချင်းပြင်ဆင်ရန် ပိုင်ရှင်ရဲ့ စကားဝှက် (Password) ကို ရိုက်ထည့်ပါ။</div>
-                <input type="password" id="ios-password-input" class="ios-input" placeholder="Password">
-            </div>
-            <div class="ios-buttons-row" style="flex-direction: column; border-top: 0.5px solid rgba(0,0,0,0.15);">
-                <div style="display: flex; width: 100%;">
-                    <button type="button" class="ios-btn ios-btn-cancel" style="flex: 1; border-right: 0.5px solid rgba(0,0,0,0.15);" onclick="closeIosAlert()">ပယ်ဖျက်မည်</button>
-                    <button type="button" class="ios-btn ios-btn-ok" style="flex: 1;" onclick="submitPassword()">အိုကေ</button>
-                </div>
-                <button type="button" class="ios-btn" style="color: #ff9500; border-top: 0.5px solid rgba(0,0,0,0.15); font-size: 14px; font-weight: 500;" onclick="enablePasswordChangeMode()">🔐 စကားဝှက်အသစ်ချိန်းမည်</button>
-            </div>
-        </div>
+        <button type="button" class="btn-settings" onclick="toggleSettings()" title="သီချင်းရွေးရန်">⚙️</button>
+        <button type="button" class="btn-home" id="home-button" onclick="goBackToMain()" title="ပင်မစာမျက်နှာသို့">🏡</button>
     </div>
 
     <div class="settings-panel" id="settings-panel">
         <h4>သီချင်းရွေးချယ်ရန် 🎵</h4>
         <div class="audio-group">
             <label>ပင်မနောက်ခံသီချင်း:</label>
-            <input type="file" id="main-audio-file" accept="audio/*" onchange="uploadAudio(this, 'main')">
+            <input type="file" accept="audio/*" onchange="uploadAudio(this, 'main')">
         </div>
         <div class="audio-group">
             <label>"အရမ်းချစ်တယ်" သီချင်း:</label>
-            <input type="file" id="love-audio-file" accept="audio/*" onchange="uploadAudio(this, 'love')">
+            <input type="file" accept="audio/*" onchange="uploadAudio(this, 'love')">
         </div>
         <div class="audio-group">
             <label>"မချစ်ဖူး" သီချင်း:</label>
-            <input type="file" id="not-love-audio-file" accept="audio/*" onchange="uploadAudio(this, 'not-love')">
+            <input type="file" accept="audio/*" onchange="uploadAudio(this, 'not-love')">
         </div>
         <div class="status-msg" id="upload-status">Firebase သို့ သိမ်းဆည်းနေပါသည်... 💾</div>
     </div>
@@ -397,9 +233,7 @@
     <div class="wrapper">
         <div class="page-section" id="main-section">
             <div class="gif-container">
-                <div class="tenor-gif-embed" data-postid="7562928744613497012" data-share-method="host" data-aspect-ratio="0.97479" data-width="100%">
-                    <a href="https://tenor.com/view/milk-and-mocha-milk-mocha-bear-milk-mocha-dance-gif-7562928744613497012">Milk And Mocha GIF</a>
-                </div>
+                <div class="tenor-gif-embed" data-postid="7562928744613497012" data-width="100%"></div>
             </div>
             <div class="question-text">ကျွန်တော်ခဗျားလေးကိုမေးစရာရှိလို့...</div>
             <button type="button" class="btn-outline btn-main" onclick="showLoveButtons()">ဘာမေးမှာလဲ နှိပ်ကြည့်မယ်</button>
@@ -407,53 +241,40 @@
 
         <div class="page-section" id="love-box">
             <div class="gif-container" id="waiting-gif-box">
-                <div class="tenor-gif-embed" data-postid="14531661802041862698" data-share-method="host" data-aspect-ratio="1" data-width="100%">
-                    <a href="https://tenor.com/view/milkandmocha-gif-14531661802041862698">Milkandmocha Sticker</a>
-                </div>
+                <div class="tenor-gif-embed" data-postid="14531661802041862698" data-width="100%"></div>
             </div>
-
             <div class="gif-container gif-surprise" id="happy-gif-box">
-                <div class="tenor-gif-embed" data-postid="8604663346218614199" data-share-method="host" data-aspect-ratio="1.23333" data-width="100%">
-                    <a href="https://tenor.com/view/milk-and-mocha-milk-and-mocha-bear-gif-8604663346218614199">Milk And Mocha Bear Sticker</a>
-                </div>
+                <div class="tenor-gif-embed" data-postid="8604663346218614199" data-width="100%"></div>
             </div>
-
             <div class="gif-container gif-surprise" id="sad-gif-box">
-                <div class="tenor-gif-embed" data-postid="4822939937925547997" data-share-method="host" data-aspect-ratio="1.06796" data-width="100%">
-                    <a href="https://tenor.com/view/mocha-cry-gif-4822939937925547997">Mocha Cry Sticker</a>
-                </div>
+                <div class="tenor-gif-embed" data-postid="4822939937925547997" data-width="100%"></div>
             </div>
             
             <div class="buttons-row">
                 <button type="button" class="btn-outline btn-love" onclick="playLoveEffect(event)">အရမ်းချစ်တယ်</button>
-                <button type="button" class="btn-outline btn-not-love" onclick="playAngryEffect(this, event)">မချစ်ဖူး</button>
+                <button type="button" class="btn-outline btn-not-love" onclick="playAngryEffect(event)">မချစ်ဖူး</button>
             </div>
 
-            <div class="result-text" id="sweet-text">
-                တစ်သက်လုံး ထာဝရချစ်သွားမှာပါ ချစ်ရတဲ့သူလေးရယ် 🥰💖
-            </div>
-
-            <div class="result-text" id="joke-text">
-                မချစ်ဖူးနှိပ်တယ်ပေါ့<br>ပါရိုက်ခံချင်နေတာလား 😤👊
-            </div>
+            <div class="result-text" id="sweet-text">တစ်သက်လုံး ထာဝရချစ်သွားမှာပါ ချစ်ရတဲ့သူလေးရယ် 🥰💖</div>
+            <div class="result-text" id="joke-text">မချစ်ဖူးနှိပ်တယ်ပေါ့ ပါရိုက်ခံချင်နေတာလား 😤👊</div>
         </div>
     </div>
 
     <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
     <script>
-        // သင့်ပုံထဲမှ လင့်ခ်နှင့် ကိုက်ညီသော မှန်ကန်သည့် Config တန်ဖိုးများ
+        // ⚠️ သင့်ရဲ့ love-kho Project အသစ်အတွက် အမှန်ကန်ဆုံး ပြင်ဆင်ပေးထားသည့် Config
         const firebaseConfig = {
-            apiKey: "AIzaSyAo0NxlLIUtWzIJJx8Ein5Ftidacw0W9Lw",
-            authDomain: "myrecordsystem-af249.firebaseapp.com",
-            databaseURL: "https://myrecordsystem-af249-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "myrecordsystem-af249",
-            storageBucket: "myrecordsystem-af249.firebasestorage.app",
-            messagingSenderId: "64211980634",
-            appId: "1:64211980634:web:5103beef42f9d7c145e363"
+            apiKey: "AIzaSyCz-uMdt2UvHRbfV10_oQJTaBieWasPqKk",
+            authDomain: "love-kho.firebaseapp.com",
+            projectId: "love-kho",
+            storageBucket: "love-kho.firebasestorage.app",
+            messagingSenderId: "700127361376",
+            appId: "1:700127361376:web:7074c4367f2f87db518605",
+            measurementId: "G-MEBRQX063E",
+            databaseURL: "https://love-kho-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
 
-        // Firebase ကို ကနဦးချိတ်ဆက်ခြင်း
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
@@ -468,46 +289,23 @@
         const settingsPanel = document.getElementById('settings-panel');
         const uploadStatus = document.getElementById('upload-status');
         const dbStatusDot = document.getElementById('db-status-dot');
-        
-        const iosOverlay = document.getElementById('ios-overlay');
-        const iosPasswordInput = document.getElementById('ios-password-input');
 
         const audioMain = document.getElementById('audio-main');
         const audioLove = document.getElementById('audio-love');
         const audioNotLove = document.getElementById('audio-not-love');
 
-        const fallbackPassword = '1234'; 
-        let currentPassword = fallbackPassword;
-        let isChangePasswordMode = false;
-
-        // Firebase ထံမှ စကားဝှက်ကို Realtime ဖတ်ခြင်း
-        database.ref('appSettings/password').on('value', (snapshot) => {
-            if (snapshot.val()) {
-                currentPassword = String(snapshot.val()).trim();
-            } else {
-                currentPassword = fallbackPassword;
-            }
-        });
-
-        // 🟢 ချိတ်ဆက်မှု အခြေအနေကို စောင့်ကြည့်ပြီး မီးစိမ်းပြောင်းပေးသည့်စနစ်
+        // မီးစိမ်းရန် စောင့်ကြည့်စစ်ဆေးခြင်း
         database.ref('.info/connected').on('value', (snapshot) => {
             if (snapshot.val() === true) {
                 dbStatusDot.classList.add('connected');
-                dbStatusDot.title = "Firebase Connected ✅";
-                
-                // ဒေတာဗေ့စ်လွတ်နေပါက null ပြဿနာကို ဖြေရှင်းရန် auto-create လုပ်ပေးခြင်း
                 database.ref('audioTracks').once('value', (snap) => {
-                    if (!snap.exists()) {
-                        database.ref('audioTracks').set({ init: "true" });
-                    }
+                    if (!snap.exists()) database.ref('audioTracks').set({ init: "true" });
                 });
             } else {
                 dbStatusDot.classList.remove('connected');
-                dbStatusDot.title = "Firebase Disconnected ❌";
             }
         });
 
-        // Firebase မှ သီချင်းဒေတာများကို ရယူခြင်း
         database.ref('audioTracks').on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -517,142 +315,51 @@
             }
         });
 
-        function openIosAlert() {
-            if (settingsPanel.style.display === 'block') {
-                settingsPanel.style.display = 'none';
-                return;
-            }
-            iosPasswordInput.value = ''; 
-            iosOverlay.style.display = 'flex';
-        }
-
-        function closeIosAlert() {
-            iosOverlay.style.display = 'none';
-            isChangePasswordMode = false;
-            document.getElementById('ios-alert-title').innerText = "စကားဝှက်တောင်းဆိုခြင်း";
-            document.getElementById('ios-alert-message').innerText = "သီချင်းပြင်ဆင်ရန် ပိုင်ရှင်ရဲ့ စကားဝှက် (Password) ကို ရိုက်ထည့်ပါ။";
-            document.getElementById('ios-password-input').placeholder = "Password";
-        }
-
-        function enablePasswordChangeMode() {
-            isChangePasswordMode = true;
-            document.getElementById('ios-alert-title').innerText = "စကားဝှက်အသစ်သတ်မှတ်ခြင်း";
-            document.getElementById('ios-alert-message').innerText = "ယခင်စကားဝှက်ဟောင်း (သို့) မူလစကားဝှက် 1234 ကို အရင်ရိုက်ထည့်ပေးပါ။";
-            document.getElementById('ios-password-input').value = '';
-            document.getElementById('ios-password-input').placeholder = "စကားဝှက်ဟောင်း";
-            document.getElementById('ios-password-input').focus();
-        }
-
-        function submitPassword() {
-            const inputPassword = String(iosPasswordInput.value).trim();
-
-            if (isChangePasswordMode) {
-                if (inputPassword === currentPassword || inputPassword === fallbackPassword) {
-                    const newPassword = prompt("စကားဝှက်အသစ်ကို ရိုက်ထည့်ပါ:");
-                    if (newPassword && newPassword.trim() !== "") {
-                        database.ref('appSettings/password').set(newPassword.trim())
-                        .then(() => {
-                            alert("စကားဝှက်အသစ်ကို Firebase ထဲတွင် အောင်မြင်စွာ သိမ်းလိုက်ပါပြီ။ ✅");
-                            closeIosAlert();
-                        })
-                        .catch((error) => {
-                            alert("Error: " + error.message);
-                        });
-                    } else {
-                        alert("စကားဝှက်သည် အလွတ်မဖြစ်ရပါ။");
-                    }
-                } else {
-                    alert("❌ စကားဝှက်ဟောင်း မှားယွင်းနေပါသည်။");
-                    iosPasswordInput.value = '';
-                    iosPasswordInput.focus();
-                }
-                return;
-            }
-
-            // Password စစ်ဆေးခြင်း
-            if (inputPassword === currentPassword || inputPassword === fallbackPassword) {
-                iosOverlay.style.display = 'none';
-                settingsPanel.style.display = 'block';
-            } else {
-                alert("❌ စကားဝှက် မှားယွင်းနေပါသည်။ ပြန်လည်ကြိုးစားပါ။");
-                iosPasswordInput.value = '';
-                iosPasswordInput.focus();
-            }
+        // 🔓 Password လုံးဝမလိုဘဲ ပွင့်စေသောစနစ်
+        function toggleSettings() {
+            settingsPanel.style.display = (settingsPanel.style.display === 'block') ? 'none' : 'block';
         }
 
         function showLoveButtons() {
-            mainSection.style.opacity = '0';
-            setTimeout(() => {
-                mainSection.style.display = 'none';
-                loveBox.style.display = 'flex';
-                setTimeout(() => {
-                    loveBox.style.opacity = '1';
-                    waitingGif.style.display = 'block';
-                }, 50);
-            }, 300);
-            if(audioMain.src) audioMain.play().catch(e => console.log("Audio play blocked"));
+            mainSection.style.display = 'none';
+            loveBox.style.display = 'flex';
+            loveBox.style.opacity = '1';
+            waitingGif.style.display = 'block';
+            if(audioMain.src) audioMain.play().catch(e => {});
         }
 
         function goBackToMain() {
-            loveBox.style.opacity = '0';
-            setTimeout(() => {
-                loveBox.style.display = 'none';
-                mainSection.style.display = 'flex';
-                setTimeout(() => { mainSection.style.opacity = '1'; }, 50);
-                
-                waitingGif.style.display = 'none';
-                happyGif.style.display = 'none';
-                sadGif.style.display = 'none';
-                sweetText.style.display = 'none';
-                jokeText.style.display = 'none';
-                homeButton.style.display = 'none';
-                document.querySelector('.buttons-row').style.display = 'flex';
-                
-                audioLove.pause(); audioLove.currentTime = 0;
-                audioNotLove.pause(); audioNotLove.currentTime = 0;
-                if(audioMain.src) audioMain.play();
-            }, 300);
+            loveBox.style.display = 'none';
+            mainSection.style.display = 'flex';
+            waitingGif.style.display = 'none'; happyGif.style.display = 'none'; sadGif.style.display = 'none';
+            sweetText.style.display = 'none'; jokeText.style.display = 'none'; homeButton.style.display = 'none';
+            document.querySelector('.buttons-row').style.display = 'flex';
+            audioLove.pause(); audioNotLove.pause();
+            if(audioMain.src) audioMain.play();
         }
 
         function playLoveEffect(e) {
             document.querySelector('.buttons-row').style.display = 'none';
-            waitingGif.style.display = 'none';
-            happyGif.style.display = 'block';
-            sweetText.style.display = 'block';
-            homeButton.style.display = 'flex';
-            
-            audioMain.pause();
-            if(audioLove.src) audioLove.play();
+            waitingGif.style.display = 'none'; happyGif.style.display = 'block';
+            sweetText.style.display = 'block'; homeButton.style.display = 'flex';
+            audioMain.pause(); if(audioLove.src) audioLove.play();
             createHearts(e);
         }
 
-        function playAngryEffect(btn, e) {
-            btn.classList.add('shake-effect');
-            setTimeout(() => btn.classList.remove('shake-effect'), 300);
-            
+        function playAngryEffect(e) {
             document.querySelector('.buttons-row').style.display = 'none';
-            waitingGif.style.display = 'none';
-            sadGif.style.display = 'block';
-            jokeText.style.display = 'block';
-            homeButton.style.display = 'flex';
-
-            audioMain.pause();
-            if(audioNotLove.src) audioNotLove.play();
+            waitingGif.style.display = 'none'; sadGif.style.display = 'block';
+            jokeText.style.display = 'block'; homeButton.style.display = 'flex';
+            audioMain.pause(); if(audioNotLove.src) audioNotLove.play();
         }
 
         function createHearts(e) {
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 10; i++) {
                 const p = document.createElement('div');
-                p.classList.add('particle');
-                p.innerText = ['💖','💘','💝','❤️','🥰'][Math.floor(Math.random()*5)];
-                p.style.left = e.clientX + 'px';
-                p.style.top = e.clientY + 'px';
-                
-                const angle = Math.random() * Math.PI * 2;
-                const speed = 50 + Math.random() * 120;
-                p.style.setProperty('--x', Math.cos(angle) * speed + 'px');
-                p.style.setProperty('--y', Math.sin(angle) * speed + 'px');
-                
+                p.classList.add('particle'); p.innerText = '💖';
+                p.style.left = e.clientX + 'px'; p.style.top = e.clientY + 'px';
+                p.style.setProperty('--x', (Math.random() - 0.5) * 200 + 'px');
+                p.style.setProperty('--y', (Math.random() - 0.5) * 200 + 'px');
                 document.body.appendChild(p);
                 setTimeout(() => p.remove(), 1500);
             }
@@ -662,21 +369,15 @@
             if (!input.files || !input.files[0]) return;
             uploadStatus.style.display = 'block';
             uploadStatus.innerText = "Firebase သို့ သိမ်းဆည်းနေပါသည်... 💾";
-            
-            const file = input.files[0];
             const reader = new FileReader();
             reader.onload = function(e) {
-                const base64Data = e.target.result;
-                database.ref('audioTracks/' + trackType).set(base64Data)
+                database.ref('audioTracks/' + trackType).set(e.target.result)
                 .then(() => {
-                    uploadStatus.innerText = "သိမ်းဆည်းမှု အောင်မြင်ပါသည်! 🎉";
+                    uploadStatus.innerText = "အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ! 🎉";
                     setTimeout(() => uploadStatus.style.display = 'none', 2000);
-                })
-                .catch(err => {
-                    uploadStatus.innerText = "Error: " + err.message;
                 });
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(input.files[0]);
         }
     </script>
 </body>
