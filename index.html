@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Love Question</title>
     <style>
-        /* တစ်ကိုယ်လုံးကို အလယ်တည့်တည့်မှာ ပုံသေချုပ်ထားမယ့် စနစ် */
         body {
             background-color: #e6f2ff; 
             display: flex;
@@ -20,7 +19,6 @@
             user-select: none;
         }
 
-        /* ပင်မ Container Wrapper */
         .wrapper {
             display: grid;
             grid-template-columns: 1fr;
@@ -34,7 +32,6 @@
             box-sizing: border-box;
         }
 
-        /* မျက်နှာပြင် နှစ်ခုလုံးကို တစ်နေရာတည်းမှာ ကွက်တိ ထပ်နေစေမယ့်စနစ် */
         .page-section {
             grid-area: 1 / 1 / 2 / 2;
             width: 100%;
@@ -52,7 +49,6 @@
             opacity: 0;
         }
 
-        /* ညာဘက်အပေါ်ထောင့်တွင် ပုံသေတည်ရှိနေမည့် Control Buttons Wrapper */
         .top-controls {
             position: fixed;
             top: 20px;
@@ -63,21 +59,20 @@
             z-index: 9999;
         }
 
-        /* Firebase Connection Status Indicator (iOS Style) */
+        /* Firebase Indicator */
         .status-dot {
-            width: 10px;
-            height: 10px;
-            background-color: #ff3b30; /* Default: Disconnected (Red) */
+            width: 12px;
+            height: 12px;
+            background-color: #ff3b30; 
             border-radius: 50%;
             box-shadow: 0 0 8px rgba(255, 59, 48, 0.6);
             transition: all 0.4s ease;
             position: relative;
         }
         .status-dot.connected {
-            background-color: #34c759; /* Connected: Green */
+            background-color: #34c759; 
             box-shadow: 0 0 10px rgba(52, 199, 89, 0.8);
         }
-        /* အချက်ပြ မီးလုံးလေး နဂိုအတိုင်း ငြိမ်မနေဘဲ လှုပ်ရှားနေစေရန် Pulse Effect */
         .status-dot::after {
             content: '';
             position: absolute;
@@ -92,7 +87,6 @@
             100% { transform: scale(2.5); opacity: 0; }
         }
 
-        /* iOS Tap Highlight ဖျောက်ရန် */
         .btn-home, .btn-settings, .btn-outline, .ios-btn {
             -webkit-tap-highlight-color: transparent !important;
             -webkit-appearance: none;
@@ -114,7 +108,6 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Settings Button */
         .btn-settings {
             background: #ffffff;
             border: none;
@@ -135,7 +128,6 @@
             color: white;
         }
         
-        /* Audio Settings Panel */
         .settings-panel {
             display: none;
             position: fixed;
@@ -156,7 +148,6 @@
         .audio-group input { width: 100%; font-size: 11px; }
         .status-msg { font-size: 11px; color: #28a745; margin-top: 5px; display: none; }
 
-        /* iOS-Style Alert Dialog */
         .ios-overlay {
             display: none;
             position: fixed;
@@ -207,7 +198,6 @@
         .ios-btn-ok { color: #007ff9; font-weight: 600; }
         .ios-btn:active { background: rgba(0,0,0,0.05); }
 
-        /* CSS Home Icon */
         .home-icon {
             position: relative;
             width: 16px;
@@ -248,7 +238,6 @@
         .btn-home:hover .home-icon:after { background: #007bff; }
         .btn-home:active { transform: translateY(-1px) scale(0.98); }
 
-        /* GIF Container */
         .gif-container {
             margin-bottom: 25px;
             border-radius: 15px;
@@ -352,11 +341,14 @@
             100% { transform: translate(var(--x), var(--y)) scale(0.4); opacity: 0; }
         }
     </style>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
     <div class="top-controls">
-        <div class="status-dot" id="db-status-dot" title="Firebase Disconnected"></div>
+        <div class="status-dot" id="db-status-dot" title="Connecting..."></div>
         
         <button type="button" class="btn-settings" onclick="openIosAlert()" title="သီချင်းရွေးရန်">⚙️</button>
         <button type="button" class="btn-home" id="home-button" onclick="goBackToMain()" title="ပင်မစာမျက်နှာသို့">
@@ -449,11 +441,8 @@
 
     <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-
     <script>
-        // Firebase Configuration
+        // သင့်ပုံထဲမှ လင့်ခ်နှင့် ကိုက်ညီသော မှန်ကန်သည့် Config တန်ဖိုးများ
         const firebaseConfig = {
             apiKey: "AIzaSyAo0NxlLIUtWzIJJx8Ein5Ftidacw0W9Lw",
             authDomain: "myrecordsystem-af249.firebaseapp.com",
@@ -461,11 +450,10 @@
             projectId: "myrecordsystem-af249",
             storageBucket: "myrecordsystem-af249.firebasestorage.app",
             messagingSenderId: "64211980634",
-            appId: "1:64211980634:web:5103beef42f9d7c145e363",
-            measurementId: "G-WWNVC0CVV5"
+            appId: "1:64211980634:web:5103beef42f9d7c145e363"
         };
 
-        // Firebase Init
+        // Firebase ကို ကနဦးချိတ်ဆက်ခြင်း
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
@@ -488,32 +476,38 @@
         const audioLove = document.getElementById('audio-love');
         const audioNotLove = document.getElementById('audio-not-love');
 
-        // App Password System
-        const defaultPassword = 'iosဒီဆိုင်'; // မူလ အမာခံ စကားဝှက်
-        let currentPassword = defaultPassword; 
+        const fallbackPassword = '1234'; 
+        let currentPassword = fallbackPassword;
         let isChangePasswordMode = false;
 
-        // Firebase မှ စကားဝှက်ကို Realtime ဆွဲယူစစ်ဆေးခြင်း
+        // Firebase ထံမှ စကားဝှက်ကို Realtime ဖတ်ခြင်း
         database.ref('appSettings/password').on('value', (snapshot) => {
             if (snapshot.val()) {
-                currentPassword = snapshot.val();
+                currentPassword = String(snapshot.val()).trim();
             } else {
-                currentPassword = defaultPassword;
+                currentPassword = fallbackPassword;
             }
         });
 
-        // 🟢 Firebase Connection Status
+        // 🟢 ချိတ်ဆက်မှု အခြေအနေကို စောင့်ကြည့်ပြီး မီးစိမ်းပြောင်းပေးသည့်စနစ်
         database.ref('.info/connected').on('value', (snapshot) => {
             if (snapshot.val() === true) {
                 dbStatusDot.classList.add('connected');
-                dbStatusDot.title = "Firebase Connected (Online) ✅";
+                dbStatusDot.title = "Firebase Connected ✅";
+                
+                // ဒေတာဗေ့စ်လွတ်နေပါက null ပြဿနာကို ဖြေရှင်းရန် auto-create လုပ်ပေးခြင်း
+                database.ref('audioTracks').once('value', (snap) => {
+                    if (!snap.exists()) {
+                        database.ref('audioTracks').set({ init: "true" });
+                    }
+                });
             } else {
                 dbStatusDot.classList.remove('connected');
-                dbStatusDot.title = "Firebase Disconnected (Offline) ❌";
+                dbStatusDot.title = "Firebase Disconnected ❌";
             }
         });
 
-        // Firebase မှ သီချင်းဒေတာများကို ဖတ်ယူခြင်း
+        // Firebase မှ သီချင်းဒေတာများကို ရယူခြင်း
         database.ref('audioTracks').on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -543,30 +537,29 @@
         function enablePasswordChangeMode() {
             isChangePasswordMode = true;
             document.getElementById('ios-alert-title').innerText = "စကားဝှက်အသစ်သတ်မှတ်ခြင်း";
-            document.getElementById('ios-alert-message').innerText = "ယခင်စကားဝှက်ဟောင်း သို့မဟုတ် မူလစကားဝှက်ကို ရိုက်ထည့်ပေးပါ။";
+            document.getElementById('ios-alert-message').innerText = "ယခင်စကားဝှက်ဟောင်း (သို့) မူလစကားဝှက် 1234 ကို အရင်ရိုက်ထည့်ပေးပါ။";
             document.getElementById('ios-password-input').value = '';
             document.getElementById('ios-password-input').placeholder = "စကားဝှက်ဟောင်း";
             document.getElementById('ios-password-input').focus();
         }
 
         function submitPassword() {
-            const inputPassword = iosPasswordInput.value;
+            const inputPassword = String(iosPasswordInput.value).trim();
 
-            // စကားဝှက်အသစ် ပြောင်းလဲခြင်း Mode
             if (isChangePasswordMode) {
-                if (inputPassword === currentPassword || inputPassword === defaultPassword) {
+                if (inputPassword === currentPassword || inputPassword === fallbackPassword) {
                     const newPassword = prompt("စကားဝှက်အသစ်ကို ရိုက်ထည့်ပါ:");
                     if (newPassword && newPassword.trim() !== "") {
                         database.ref('appSettings/password').set(newPassword.trim())
                         .then(() => {
-                            alert("စကားဝှက်အသစ်ကို အောင်မြင်စွာ ပြောင်းလဲပြီးပါပြီ။ ✅");
+                            alert("စကားဝှက်အသစ်ကို Firebase ထဲတွင် အောင်မြင်စွာ သိမ်းလိုက်ပါပြီ။ ✅");
                             closeIosAlert();
                         })
                         .catch((error) => {
-                            alert("အမှားအယွင်းရှိပါသည်: " + error.message);
+                            alert("Error: " + error.message);
                         });
                     } else {
-                        alert("စကားဝှက်အသစ်သည် အလွတ်မဖြစ်ရပါ။");
+                        alert("စကားဝှက်သည် အလွတ်မဖြစ်ရပါ။");
                     }
                 } else {
                     alert("❌ စကားဝှက်ဟောင်း မှားယွင်းနေပါသည်။");
@@ -576,8 +569,8 @@
                 return;
             }
 
-            // သီချင်းပြင်ဆင်ရန် Settings Panel ဖွင့်ခြင်း Mode (Firebase password သို့မဟုတ် မူလကုဒ် 'iosဒီဆိုင်' နှစ်သက်ရာနဲ့ ဝင်လို့ရအောင် ပြင်ဆင်ထားသည်)
-            if (inputPassword === currentPassword || inputPassword === defaultPassword) {
+            // Password စစ်ဆေးခြင်း
+            if (inputPassword === currentPassword || inputPassword === fallbackPassword) {
                 iosOverlay.style.display = 'none';
                 settingsPanel.style.display = 'block';
             } else {
@@ -587,7 +580,6 @@
             }
         }
 
-        // --- မူလ UI Interaction Logic များ ---
         function showLoveButtons() {
             mainSection.style.opacity = '0';
             setTimeout(() => {
@@ -669,6 +661,7 @@
         function uploadAudio(input, trackType) {
             if (!input.files || !input.files[0]) return;
             uploadStatus.style.display = 'block';
+            uploadStatus.innerText = "Firebase သို့ သိမ်းဆည်းနေပါသည်... 💾";
             
             const file = input.files[0];
             const reader = new FileReader();
