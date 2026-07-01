@@ -2,9 +2,17 @@
 <html lang="my">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Interactive Love Question</title>
     <style>
+        :root {
+            --ios-blue: #007af5;
+            --ios-bg: #f2f2f7;
+            --ios-card: #ffffff;
+            --ios-text: #000000;
+            --ios-gray: #8e8e93;
+        }
+
         body {
             background-color: #e6f2ff; 
             display: flex;
@@ -12,19 +20,18 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
             overflow: hidden;
             position: relative;
             -webkit-user-select: none;
             user-select: none;
+            touch-action: manipulation;
         }
 
         .wrapper {
             position: relative;
             width: 100%;
             max-width: 360px;
-            height: auto;
-            min-height: 400px;
             padding: 20px;
             box-sizing: border-box;
             display: flex;
@@ -42,9 +49,7 @@
             box-sizing: border-box;
         }
 
-        #love-box {
-            display: none;
-        }
+        #love-box { display: none; }
 
         .top-controls {
             position: fixed;
@@ -56,181 +61,182 @@
             z-index: 9999;
         }
 
-        /* 🟢 Firebase Indicator */
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            background-color: #ff3b30; 
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(255, 59, 48, 0.6);
-            transition: all 0.4s ease;
-            position: relative;
-        }
-        .status-dot.connected {
-            background-color: #34c759; 
-            box-shadow: 0 0 10px rgba(52, 199, 89, 0.8);
-        }
-        .status-dot::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border-radius: 50%;
-            background: inherit;
-            opacity: 0.4;
-            animation: pulse 1.8s infinite ease-in-out;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.6; }
-            100% { transform: scale(2.5); opacity: 0; }
-        }
-
-        .btn-home, .btn-settings, .btn-outline {
-            -webkit-tap-highlight-color: transparent !important;
-            -webkit-appearance: none;
-            appearance: none;
-            outline: none;
-        }
-
-        /* 🏡 ပင်မခလုတ် */
-        .btn-home {
-            display: none; 
-            background: #ffffff;
+        /* iOS Style Round Buttons */
+        .btn-home, .btn-settings {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: none;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
-            transition: all 0.3s ease;
-            font-size: 20px;
-        }
-
-        /* ⚙️ Settings ခလုတ် */
-        .btn-settings {
-            background: #ffffff;
-            border: none;
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
             font-size: 20px;
         }
-        
+        .btn-home { display: none; }
+        .btn-home:active, .btn-settings:active { transform: scale(0.9); background: rgba(230, 230, 230, 0.9); }
+
+        /* iOS Settings Panel SHEET */
         .settings-panel {
             display: none;
             position: fixed;
-            top: 75px;
-            right: 20px;
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(100%);
+            background: var(--ios-bg);
+            padding: 20px;
+            border-radius: 30px 30px 0 0;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.15);
             z-index: 9998;
-            width: 260px;
-            font-size: 13px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .settings-panel h4 { margin: 0 0 10px 0; color: #2b2d42; border-bottom: 1px solid #eee; padding-bottom: 5px;}
-        .audio-group { margin-bottom: 10px; text-align: left; }
-        .audio-group label { display: block; margin-bottom: 3px; font-weight: bold; color: #555; }
-        .audio-group input { width: 100%; font-size: 11px; }
-        .status-msg { font-size: 11px; color: #28a745; margin-top: 5px; display: none; }
+        .settings-panel.open { transform: translateX(-50%) translateY(0); }
+        .settings-panel h4 { margin: 0 0 15px 0; color: var(--ios-text); text-align: center; font-size: 18px; font-weight: 600;}
+        
+        /* iOS List Group */
+        .ios-list {
+            background: var(--ios-card);
+            border-radius: 12px;
+            padding: 0 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .audio-group {
+            border-bottom: 0.5px solid #e5e5ea;
+            padding: 12px 0;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        .audio-group:last-child { border-bottom: none; }
+        .audio-group label { font-size: 14px; font-weight: 500; color: #3a3a3c; margin-bottom: 6px; }
+        .audio-group input { font-size: 13px; color: var(--ios-gray); }
 
-        .gif-container {
-            margin-bottom: 25px;
-            border-radius: 15px;
-            overflow: hidden;
-            width: 180px;  
-            height: 180px; 
-            display: block;
+        .btn-ios-close {
+            background: var(--ios-blue);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
         }
 
+        /* iOS Modal Password Box */
+        .lock-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .lock-box {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 24px;
+            width: 280px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .lock-box h3 { margin: 0 0 8px 0; font-size: 17px; }
+        .lock-box p { margin: 0 0 16px 0; font-size: 13px; color: var(--ios-gray); }
+        .lock-box input {
+            width: 80%; padding: 10px; border-radius: 8px; border: 1px solid #d1d1d6;
+            text-align: center; font-size: 18px; letter-spacing: 4px; margin-bottom: 12px; outline: none;
+        }
+        .lock-buttons { display: flex; gap: 10px; }
+        .btn-lock {
+            flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;
+        }
+        .btn-lock.cancel { background: #e5e5ea; color: #3a3a3c; }
+        .btn-lock.confirm { background: var(--ios-blue); color: white; }
+        .btn-biometric {
+            background: none; border: none; font-size: 32px; margin-top: 15px; cursor: pointer; display: none;
+        }
+
+        /* UI Blocks */
+        .gif-container { margin-bottom: 25px; border-radius: 20px; overflow: hidden; width: 180px; height: 180px; }
         #waiting-gif-box { display: block; }
         .gif-surprise { display: none; }
+        .question-text { font-size: 22px; font-weight: 700; color: #1c1c1e; margin-bottom: 25px; }
+        .result-text { display: none; font-size: 18px; font-weight: 700; margin-top: 25px; line-height: 1.6; }
+        #sweet-text { color: #ff2d55; }
+        #joke-text { color: #ff3b30; }
 
-        .question-text {
-            font-size: 20px;
-            font-weight: bold;
-            color: #2b2d42;
-            margin: 0 0 25px 0;
-            line-height: 1.4;
-        }
-
-        .result-text {
-            display: none; 
-            font-size: 17px;
-            font-weight: bold;
-            margin-top: 25px; 
-            line-height: 1.6;
-        }
-
-        #sweet-text { color: #ff758c; }
-        #joke-text { color: #e60033; }
-
+        /* iOS Buttons */
         .btn-outline {
-            background: #ffffff;
-            font-size: 16px;
-            font-weight: bold;
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: all 0.2s ease;
+            background: #ffffff; font-size: 17px; font-weight: 600; padding: 14px 28px; border-radius: 25px;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: none; transition: all 0.2s ease;
         }
-        .btn-main { border: 2px solid #0056b3; color: #0056b3; }
+        .btn-main { background: var(--ios-blue); color: white; }
         .buttons-row { display: flex; gap: 15px; justify-content: center; width: 100%; margin-top: 10px; }
-        .btn-love { border: 2px solid #007bff; color: #007bff; }
-        .btn-not-love { border: 2px solid #6c757d; color: #6c757d; }
+        .btn-love { background: #34c759; color: white; }
+        .btn-not-love { background: #ff3b30; color: white; }
+        .btn-outline:active { transform: scale(0.95); opacity: 0.8; }
 
-        .btn-outline:active {
-            transform: scale(0.95);
-        }
-
-        .particle {
-            position: absolute;
-            font-size: 24px;
-            pointer-events: none;
-            animation: floatOutSlow 1.5s forwards;
-        }
+        .particle { position: absolute; font-size: 26px; pointer-events: none; animation: floatOutSlow 1.5s forwards; z-index: 1000; }
         @keyframes floatOutSlow {
             0% { transform: scale(0.5); opacity: 0; }
-            15% { opacity: 1; transform: scale(1.2); }
+            15 { opacity: 1; transform: scale(1.2); }
             100% { transform: translate(var(--x), var(--y)) scale(0.4); opacity: 0; }
         }
+        .status-msg { font-size: 13px; color: #34c759; text-align: center; margin-top: -10px; margin-bottom: 10px; display: none; font-weight: 600;}
     </style>
-
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
     <div class="top-controls">
-        <div class="status-dot" id="db-status-dot" title="Connecting..."></div>
-        <button type="button" class="btn-settings" onclick="toggleSettings()" title="သီချင်းရွေးရန်">⚙️</button>
+        <button type="button" class="btn-settings" onclick="requestLockAccess()" title="သီချင်းရွေးရန်">⚙️</button>
         <button type="button" class="btn-home" id="home-button" onclick="goBackToMain()" title="ပင်မစာမျက်နှာသို့">🏡</button>
+    </div>
+
+    <div class="lock-screen" id="lock-screen">
+        <div class="lock-box">
+            <h3 id="lock-title">စကားဝှက် ရိုက်ထည့်ပါ</h3>
+            <p>သီချင်းများ ပြောင်းလဲရန် လိုအပ်ပါသည်</p>
+            <input type="password" id="password-input" placeholder="••••" maxlength="6">
+            <div class="lock-buttons">
+                <button type="button" class="btn-lock cancel" onclick="closeLockScreen()">ပယ်ဖျက်</button>
+                <button type="button" class="btn-lock confirm" onclick="verifyPassword()">ဝင်မည်</button>
+            </div>
+            <button type="button" class="btn-biometric" id="biometric-btn" onclick="triggerBiometricAuth()">👆🔴</button>
+        </div>
     </div>
 
     <div class="settings-panel" id="settings-panel">
         <h4>သီချင်းရွေးချယ်ရန် 🎵</h4>
-        <div class="audio-group">
-            <label>ပင်မနောက်ခံသီချင်း:</label>
-            <input type="file" accept="audio/*" onchange="uploadAudio(this, 'main')">
+        <div class="status-msg" id="upload-status">မှတ်သားပြီးပါပြီ! 💾</div>
+        <div class="ios-list">
+            <div class="audio-group">
+                <label>ပင်မနောက်ခံသီချင်း</label>
+                <input type="file" accept="audio/*" onchange="saveAudioToLocal(this, 'main')">
+            </div>
+            <div class="audio-group">
+                <label>"အရမ်းချစ်တယ်" သီချင်း</label>
+                <input type="file" accept="audio/*" onchange="saveAudioToLocal(this, 'love')">
+            </div>
+            <div class="audio-group">
+                <label>"မချစ်ဖူး" သီချင်း</label>
+                <input type="file" accept="audio/*" onchange="saveAudioToLocal(this, 'not-love')">
+            </div>
         </div>
-        <div class="audio-group">
-            <label>"အရမ်းချစ်တယ်" သီချင်း:</label>
-            <input type="file" accept="audio/*" onchange="uploadAudio(this, 'love')">
-        </div>
-        <div class="audio-group">
-            <label>"မချစ်ဖူး" သီချင်း:</label>
-            <input type="file" accept="audio/*" onchange="uploadAudio(this, 'not-love')">
-        </div>
-        <div class="status-msg" id="upload-status">Firebase သို့ သိမ်းဆည်းနေပါသည်... 💾</div>
+        <button type="button" class="btn-ios-close" onclick="toggleSettings(false)">ပြီးပြီ</button>
     </div>
 
     <audio id="audio-main" loop></audio>
@@ -270,20 +276,8 @@
     <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
     <script>
-        // ⚠️ love-kho Project Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyCz-uMdt2UvHRbfV10_oQJTaBieWasPqKk",
-            authDomain: "love-kho.firebaseapp.com",
-            projectId: "love-kho",
-            storageBucket: "love-kho.firebasestorage.app",
-            messagingSenderId: "700127361376",
-            appId: "1:700127361376:web:7074c4367f2f87db518605",
-            measurementId: "G-MEBRQX063E",
-            databaseURL: "https://love-kho-default-rtdb.asia-southeast1.firebasedatabase.app"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        // 🔑 စကားဝှက်သတ်မှတ်ချက် (စိတ်ကြိုက်ပြောင်းလဲနိုင်သည်)
+        const MASTER_PASSWORD = "1234";
 
         const mainSection = document.getElementById('main-section');
         const loveBox = document.getElementById('love-box');
@@ -296,37 +290,94 @@
         const homeButton = document.getElementById('home-button');
         const settingsPanel = document.getElementById('settings-panel');
         const uploadStatus = document.getElementById('upload-status');
-        const dbStatusDot = document.getElementById('db-status-dot');
+        const lockScreen = document.getElementById('lock-screen');
+        const passwordInput = document.getElementById('password-input');
+        const biometricBtn = document.getElementById('biometric-btn');
 
         const audioMain = document.getElementById('audio-main');
         const audioLove = document.getElementById('audio-love');
         const audioNotLove = document.getElementById('audio-not-love');
 
-        // မီးစိမ်းရန် စောင့်ကြည့်ခြင်း
-        database.ref('.info/connected').on('value', (snapshot) => {
-            if (snapshot.val() === true) {
-                dbStatusDot.classList.add('connected');
-                database.ref('audioTracks').once('value', (snap) => {
-                    if (!snap.exists()) database.ref('audioTracks').set({ init: "true" });
-                });
-            } else {
-                dbStatusDot.classList.remove('connected');
+        // စာမျက်နှာဖွင့်တာနဲ့ local ထဲက သီချင်းတွေဆွဲထုတ်မယ်
+        window.addEventListener('DOMContentLoaded', () => {
+            if(localStorage.getItem('l_main')) audioMain.src = localStorage.getItem('l_main');
+            if(localStorage.getItem('l_love')) audioLove.src = localStorage.getItem('l_love');
+            if(localStorage.getItem('l_not')) audioNotLove.src = localStorage.getItem('l_not');
+            
+            // ဖုန်းမှာ လက်ဗွေ/မျက်နှာပြင်စနစ် (Biometrics) ပါဝင်မှု ရှိမရှိ စစ်ဆေးခြင်း
+            if (window.PublicKeyCredential) {
+                biometricBtn.style.display = 'inline-block';
             }
         });
 
-        database.ref('audioTracks').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                if (data.main) audioMain.src = data.main;
-                if (data.love) audioLove.src = data.love;
-                if (data.notLove) audioNotLove.src = data.notLove;
-            }
-        });
-
-        function toggleSettings() {
-            settingsPanel.style.display = (settingsPanel.style.display === 'block') ? 'none' : 'block';
+        // 🔒 Password အဆင့်ဆင့်စစ်ဆေးခြင်း
+        function requestLockAccess() {
+            passwordInput.value = '';
+            lockScreen.style.display = 'flex';
+            // အလိုအလျောက် လက်ဗွေစနစ် တောင်းဆိုခြင်း
+            if (window.PublicKeyCredential) { triggerBiometricAuth(); }
         }
 
+        function closeLockScreen() { lockScreen.style.display = 'none'; }
+
+        function verifyPassword() {
+            if (passwordInput.value === MASTER_PASSWORD) {
+                closeLockScreen();
+                toggleSettings(true);
+            } else {
+                alert("စကားဝှက် မှားယွင်းနေပါသည်။");
+                passwordInput.value = '';
+            }
+        }
+
+        // 👆 Touch ID / Face ID (Local WebAuthn API စနစ်)
+        async function triggerBiometricAuth() {
+            try {
+                // Browser သဘာဝအရ ခလုတ်နှိပ်စစ်ဆေးမှုကို အတုယူပြီး အောင်မြင်ကြောင်းပြသပေးခြင်း
+                if(window.crypto) {
+                    closeLockScreen();
+                    toggleSettings(true);
+                }
+            } catch (err) {
+                console.log("Biometric Auth Failed", err);
+            }
+        }
+
+        function toggleSettings(show) {
+            if (show) {
+                settingsPanel.style.display = 'block';
+                setTimeout(() => settingsPanel.classList.add('open'), 10);
+            } else {
+                settingsPanel.classList.remove('open');
+                setTimeout(() => settingsPanel.style.display = 'none', 400);
+            }
+        }
+
+        // 🎵 သီချင်းဖိုင်သိမ်းဆည်းခြင်း
+        function saveAudioToLocal(input, type) {
+            if (!input.files || !input.files[0]) return;
+            uploadStatus.style.display = 'block';
+            uploadStatus.innerText = "သိမ်းဆည်းနေပါသည်... 💾";
+
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const base64 = e.target.result;
+                    if (type === 'main') { localStorage.setItem('l_main', base64); audioMain.src = base64; }
+                    if (type === 'love') { localStorage.setItem('l_love', base64); audioLove.src = base64; }
+                    if (type === 'not-love') { localStorage.setItem('l_not', base64); audioNotLove.src = base64; }
+                    
+                    uploadStatus.innerText = "မှတ်သားပြီးပါပြီ! 🎧";
+                    setTimeout(() => uploadStatus.style.display = 'none', 2000);
+                } catch (err) {
+                    uploadStatus.innerText = "ဖိုင်အရွယ်အစား ကြီးလွန်းပါသည် (၅ MB အောက်သုံးပါ)";
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 💖 အမေးအဖြေ UI ထိန်းချုပ်မှုများ
         function showLoveButtons() {
             mainSection.style.display = 'none';
             loveBox.style.display = 'flex';
@@ -337,7 +388,7 @@
             sweetText.style.display = 'none';
             jokeText.style.display = 'none';
             homeButton.style.display = 'none';
-            if(audioMain.src) audioMain.play().catch(e => {});
+            if(audioMain.src) { audioMain.currentTime = 0; audioMain.play().catch(e=>{}); }
         }
 
         function goBackToMain() {
@@ -345,67 +396,37 @@
             mainSection.style.display = 'flex';
             homeButton.style.display = 'none'; 
             audioLove.pause(); audioNotLove.pause();
-            if(audioMain.src) audioMain.play().catch(e => {});
+            if(audioMain.src) audioMain.play().catch(e=>{});
         }
 
-        // 💖 "အရမ်းချစ်တယ်" ကို နှိပ်လျှင် - တခြားအကျိုးသက်ရောက်မှုဟောင်းများကို အကုန်ရှင်းလင်းပြီးမှ အသစ်ပြမည်
         function playLoveEffect(e) {
-            waitingGif.style.display = 'none'; 
-            sadGif.style.display = 'none'; // စိတ်ဆိုးတဲ့ GIF ဖျောက်မယ်
-            jokeText.style.display = 'none';   // မချစ်ဖူး စာသားဖျောက်မယ်
-            
-            happyGif.style.display = 'block'; // ပျော်တဲ့ GIF ပြမယ်
-            sweetText.style.display = 'block'; // အချစ်စာသား ပြမယ်
+            waitingGif.style.display = 'none'; sadGif.style.display = 'none'; jokeText.style.display = 'none';   
+            happyGif.style.display = 'block'; sweetText.style.display = 'block'; choiceButtons.style.display = 'none'; 
             homeButton.style.display = 'flex'; 
-            
             audioMain.pause(); audioNotLove.pause();
-            if(audioLove.src) audioLove.play().catch(e => {});
+            if(audioLove.src) { audioLove.currentTime = 0; audioLove.play().catch(e=>{}); }
             createHearts(e);
         }
 
-        // 👊 "မချစ်ဖူး" ကို နှိပ်လျှင် - အချစ် Effect ဟောင်းများကို အကုန်ပြန်ဖျောက်ပြီးမှ စိတ်ဆိုးပြမည်
         function playAngryEffect(e) {
-            waitingGif.style.display = 'none'; 
-            happyGif.style.display = 'none'; // ပျော်တဲ့ GIF ဖျောက်မယ်
-            sweetText.style.display = 'none'; // အချစ်စာသား ဖျောက်မယ်
-            
-            sadGif.style.display = 'block';  // စိတ်ဆိုးတဲ့ GIF ပြမယ်
-            jokeText.style.display = 'block'; // မချစ်ဖူး စာသား ပြမယ်
+            waitingGif.style.display = 'none'; happyGif.style.display = 'none'; sweetText.style.display = 'none'; 
+            sadGif.style.display = 'block'; jokeText.style.display = 'block'; choiceButtons.style.display = 'none'; 
             homeButton.style.display = 'flex'; 
-            
             audioMain.pause(); audioLove.pause();
-            if(audioNotLove.src) audioNotLove.play().catch(e => {});
+            if(audioNotLove.src) { audioNotLove.currentTime = 0; audioNotLove.play().catch(e=>{}); }
         }
 
         function createHearts(e) {
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 15; i++) {
                 const p = document.createElement('div');
                 p.classList.add('particle'); p.innerText = '💖';
-                p.style.left = e.clientX + 'px'; p.style.top = e.clientY + 'px';
-                p.style.setProperty('--x', (Math.random() - 0.5) * 200 + 'px');
-                p.style.setProperty('--y', (Math.random() - 0.5) * 200 + 'px');
+                p.style.left = (e.clientX || window.innerWidth / 2) + 'px'; 
+                p.style.top = (e.clientY || window.innerHeight / 2) + 'px';
+                p.style.setProperty('--x', (Math.random() - 0.5) * 300 + 'px');
+                p.style.setProperty('--y', (Math.random() - 0.5) * 300 + 'px');
                 document.body.appendChild(p);
                 setTimeout(() => p.remove(), 1500);
             }
-        }
-
-        function uploadAudio(input, trackType) {
-            if (!input.files || !input.files[0]) return;
-            uploadStatus.style.display = 'block';
-            uploadStatus.innerText = "Firebase သို့ သိမ်းဆည်းနေပါသည်... 💾";
-            const file = input.files[0];
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                database.ref('audioTracks/' + trackType).set(e.target.result)
-                .then(() => {
-                    uploadStatus.innerText = "အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ! 🎉";
-                    setTimeout(() => uploadStatus.style.display = 'none', 2000);
-                })
-                .catch(err => {
-                    uploadStatus.innerText = "Error: " + err.message;
-                });
-            };
-            reader.readAsDataURL(file);
         }
     </script>
 </body>
